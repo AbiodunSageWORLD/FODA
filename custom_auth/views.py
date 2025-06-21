@@ -4,6 +4,7 @@ from django.views import View
 from django.contrib.auth import login, logout, authenticate
 from django.contrib import messages
 from django.contrib.auth.views import PasswordResetView, PasswordResetConfirmView, PasswordChangeView
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.messages.views import SuccessMessageMixin
 
 from django.core.mail import send_mail, EmailMultiAlternatives
@@ -13,6 +14,8 @@ from django.template.loader import get_template
 from user.models import User
 from .forms import SignUpForm, LoginForm
 from foda.settings import EMAIL_HOST_USER
+
+from axes.models import AccessAttempt
 
 
 # TBD - NAME OF THE TEMPLATES AND REDIRECTS
@@ -26,7 +29,7 @@ class SignUpView(View):
             "form":form
         }
 
-        return render(request, "", context=context)
+        return render(request, "auth/signup.html", context=context)
         
 
     def post(self, request):
@@ -38,9 +41,9 @@ class SignUpView(View):
 
             user = form.save()
 
-            user.generate_verification_code
+            user.generate_verification_code()
 
-            htmly = get_template("auth/...html")
+            htmly = get_template("auth/email_verification.html")
 
             data = {
                 "first_name":first_name,
@@ -61,20 +64,20 @@ class SignUpView(View):
             messages.success(request, "Check your email for the confirmation Code")
 
             # redirects user to authenrication page
-            return render(redirect())
+            return redirect(reverse("verify_email_page"))
         
         context = {
             "form":form
         }
 
-        return render(request, "", context=context)
+        return render(request, "auth/signup.html", context=context)
         
 
 
 
 class LoginView(View):
     def get(self, request):
-        form = LoginForm
+        form = LoginForm()
 
         next_url = request.GET.get("next", "")
 
@@ -83,15 +86,15 @@ class LoginView(View):
             "next":next_url
         }
 
-        return render(request, "", context=context)
+        return render(request, "auth/login.html", context=context)
         
 
     def post(self, request):
-        form = LoginForm(request.POST)
+        form = LoginForm(request, request.POST)
         next_url= request.POST.get("next", "")
 
         if form.is_valid():
-            email = form.cleaned_data.get("email")
+            email = form.cleaned_data.get("username")
             password = form.cleaned_data.get("password")
 
             user = authenticate(request, username=email, password=password)
@@ -105,25 +108,33 @@ class LoginView(View):
                     if next_url != "":
                         return redirect(next_url)
 
-                    return redirect()
+                    return redirect(reverse("dashboard"))
 
                 else:
                     messages.error(request, "Your account is not active. " \
                     "Please check your email for the verification link or code.")
                     
-                    return redirect(reverse("verify_email_page")) 
+                    return redirect(reverse("verify_email_page"))
+                
+        # check how many times an email has attempted login
+        if email:
+            login_attempt = AccessAttempt.objects.get(username=email
+                                                # for more specific tracking, also used by IP:
+                                                # ip_address = get_client_ip(request)  
+                                                ).failures_since_start 
         
         context = {
             "form":form,
-            "next":next_url
+            "next":next_url,
+            "login_attempt":login_attempt,
         }
 
-        return render(request, "", context=context)
+        return render(request, "auth/login.html", context=context)
         
 
 class EmailAuthenticationView(View):
     def get(self, request):
-        return render(request, "")
+        return render(request, "auth/email_code_verification.html")
     
     def post(self, request):
         code = request.POST.get("verification_code","")
@@ -133,7 +144,7 @@ class EmailAuthenticationView(View):
 
             if not user.is_verification_code_valid():
                 messages.error(request, "The verification code is invalid or has expired. Please request a new one.")
-                return render(request, "") 
+                return render(request, "auth/email_code_verification.html") 
 
             user.activate() 
 
@@ -141,11 +152,11 @@ class EmailAuthenticationView(View):
 
             login(request, user)
 
-            return redirect() 
+            return redirect(reverse("dashboard")) 
 
         except User.DoesNotExist:
             messages.error(request, "The verification code is invalid or has expired. Please request a new one.")
-            return render(request, "")
+            return render(request, "auth/email_code_verification.html")
         
 
 class LogoutView(View):
@@ -157,9 +168,9 @@ class LogoutView(View):
 
 
 class UserEmailPasswordResetView(SuccessMessageMixin, PasswordResetView):
-    email_template_name = "email_password_reset.html"
+    email_template_name = "auth/email_password_reset.html"
     template_name = "auth/confirm_email_password_reset.html"
-    success_url = reverse_lazy()
+    success_url = reverse_lazy("login")
     success_message = "We have  emailed you instructions for resetting your password" \
                     "If an account exists with the email you entered. You should recieve them shortly" \
                     "If you don't recieve an email," \
@@ -170,7 +181,7 @@ class UserPasswordResetView(SuccessMessageMixin, PasswordResetConfirmView):
     success_url = reverse_lazy("login")
     success_message = "Your password has been set.  You may go ahead and log in now."
 
-class UserPasswordChangeView(SuccessMessageMixin, PasswordChangeView):
+class UserPasswordChangeView(LoginRequiredMixin, SuccessMessageMixin, PasswordChangeView):
     template_name = "auth/password_change.html"
     success_url = reverse_lazy("dashboard")
     success_message = "Your password was changed."

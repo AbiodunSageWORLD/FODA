@@ -9,7 +9,9 @@
 {% block title %}{{ food_item.name }} - Details{% endblock %}
 
 {% block content %}
+
 <div class="bg-white">
+
   <div class="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
       <div class="relative">
@@ -22,13 +24,61 @@
         <p class="mt-2 text-sm text-gray-600">Vendor: {{ food_item.vendor }}</p>
         <p class="mt-4 text-lg font-semibold text-gray-900">₦{{ food_item.price }}</p>
         <p class="mt-2 text-sm text-gray-600">{{ food_item.description }}</p>
+        
       </div>
       <div class="mt-6">
-        <a href="#" 
+          <div class="col-md-2">Quantity:</div>
+                <div class="col-md-2">
+                <select class="form-select form-select-sm" id="food_qty">
+                  <option value="1">1</option>
+                  <option value="2">2</option>
+                  <option value="3">3</option>
+                  <option value="4">4</option>
+                  <option value="5">5</option>
+                </select>
+                </div>
+            </div>
+        <button
+           id="add-to-cart"
+           type="button"
+           value="{{ food_item.id }}"
            class="block text-center w-full bg-yellow-500 hover:bg-yellow-600 text-white text-sm font-medium py-2 px-4 rounded">
           <i class="fas fa-cart-plus"></i> Add to Cart
-        </a>
+        </button>
     </div>
   </div>
+
+
+
+  <script>
+  $(document).on('click', '#add-to-cart', function(e) {
+    e.preventDefault();
+    console.log("clicked")
+    $.ajax({
+      type: 'POST',
+      url: "{% url 'cart_add' food_item.id %}",
+      data: {
+        'food_item_id': $('#add-to-cart').val(),
+        'food_item_qty': $('#food_qty option:selected').val() || '1', // Default to 1 if not specified
+        'csrfmiddlewaretoken': '{{ csrf_token }}',
+        'action': 'post'
+      },
+      success: function(json) {
+        const cartqty = document.getElementById("cart-quantity");
+        if(cartqty && json.cart_quantity !== undefined){
+           cartqty.textContent = json.cart_quantity;
+        }
+       
+        console.log(json);
+        location.reload()
+      },
+      error: function(xhr, errmsg, err) {
+      
+      }
+    });
+  });
+
+  </script>
 </div>
+
 {% endblock %}

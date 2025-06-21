@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{%block title%} Enter code {%endblock%}
+
+{% block content %}
+<div>
+    <h3> Enter code sent to your email</h3>
+    
+    <hr>
+    <br>
+
+    <form action="" method="post">
+        {% csrf_token %}
+        
+        <label for="verification_code" >Code</label>
+        <input type="text" name="verification_code" required>
+
+        <br>
+        <button type="submit">Submit</button>
+    </form>
+
+    <br>
+    <hr>
+    <br>
+    <div id="other">
+        <p>Dont have an account</p>
+        <br>
+        <a  href="{% url 'signup' %}">Register </a>
+
+    </div>
+</div>
+{% endblock content %}

@@ -1,3 +1,4 @@
+{% load static tailwind_tags %}
 <!DOCTYPE html>
 
 <html>
@@ -7,8 +8,7 @@
         <title>{%block title%}{%endblock%}</title>
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="stylesheet" href="">
-        <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+        {% tailwind_css %}
     </head>
     <body>
         <nav>
@@ -16,9 +16,24 @@
                 <li><a href="#">Home</a></li>
                 <li><a href="#">About</a></li>
                 <li><a href="#">Contact</a></li>
-                <li><a href="{% url 'cart_summary' %}">Cart Summary</a></li>
+                <li><a href="{% url 'cart_summary' %}" id="cart-quantity">cart {{ cart|length }} items</a></li>
+                
             </ul>
         </nav>
+
+        <!-- for success messages -->
+        {% if messages %}
+        <div>
+            {% for message in messages %}
+                <div {% if message.tags %} class={{message.tags}} {% endif %}>
+                    {{message}}
+                </div>
+            {% endfor %}
+         </div>
+        {% endif %}
+        <!--    -->
+
+
         <main>
         {% block content %}
         {% endblock %}

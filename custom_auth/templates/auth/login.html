@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+
+{%block title%} Login {%endblock%}
+
+{% block content %}
+<div>
+    <h3> Login to your account</h3>
+    
+    <hr>
+    <br>
+
+    <form action="" method="post">
+        {% csrf_token %}
+        <input type="hidden" name="next" value="{{next}}">
+
+        <div>
+        {{form.non_field_errors}}
+        </div>
+
+        {% for form in form  %}
+        <div class="form-control">
+            {{form.label_tag}}
+            {{form}}
+            {{form.errors}}
+        </div>
+        {% endfor %}
+
+
+        <br>
+        <button type="submit">Login</button>
+    </form>
+
+    {% if login_attempt >= 3 %}
+    <div>
+        <p>Forgotten Password</p>
+        <a href="{% url 'password_reset' %}">Reset Password</a>
+    </div>
+    {% endif %}
+
+    <br>
+    <hr>
+    <br>
+    <div>
+        <p>Dont have an account</p>
+        <br>
+        <a  href="{% url 'signup' %}">Register </a>
+
+    </div>
+</div>
+{% endblock content %}

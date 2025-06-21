@@ -8,6 +8,8 @@ class Food(models.Model):
     name = models.CharField(max_length=100)
     description = models.TextField()
     price = models.DecimalField(max_digits=10, decimal_places=2)
+    sale_price = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
+    is_sale = models.BooleanField(default=False)
     vendor = models.ForeignKey(Vendor, related_name='foods', on_delete=models.CASCADE)
     image = ImageField(upload_to='foods/', blank=True, null=True)
     
@@ -15,7 +17,7 @@ class Food(models.Model):
         return self.name
 
 class Customer(models.Model):
-    user = models.OneToOneField('auth.User', on_delete=models.CASCADE)
+    user = models.OneToOneField('user.User', on_delete=models.CASCADE)
     
     def __str__(self):
         return f"{self.first_name} {self.last_name}"

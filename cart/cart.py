@@ -1,11 +1,127 @@
+from shop.models import Food
+from user.models import User
+from decimal import Decimal
+
 
 class Cart():
     def __init__(self, request):
+    
         self.session = request.session
         self.request = request
-        cart= self.session.get('session_key')
+        cart = self.session.get('cart')
 
-        if 'session_key' not in request.session:
-            cart = self.session['session_key']= {}
+        if not cart:
+            cart = self.session['cart'] = {}
 
-            self.cart = cart
+        self.cart = cart  
+
+    def db_add(self, food, quantity):
+        food_id = str(food.id)
+        food_qty = int(quantity)
+
+        if food_id not in self.cart:
+            self.cart[food_id] = {
+                'price': str(food.price),
+                'quantity': food_qty
+            }
+
+        self.session.modified = True
+
+        if self.request.user.is_authenticated:
+            current_user = User.objects.filter(id=self.request.user.id)
+            carty = str(self.cart).replace("'", '"')  # Proper JSON-like format
+            current_user.update(old_cart=carty)
+
+
+    #Deal with logged in users
+       
+    def add(self, food, quantity):
+        food_id = str(food.id)
+        food_qty = int(quantity)
+
+        if food_id not in self.cart:
+            self.cart[food_id] = {
+                'price': str(food.price),
+                'quantity': food_qty
+            }
+
+        self.session.modified = True
+
+        if self.request.user.is_authenticated:
+            current_user = User.objects.filter(id=self.request.user.id)
+            carty = str(self.cart).replace("'", '"')  # Proper JSON-like format
+            current_user.update(old_cart=carty)
+        
+    def cart_total(self):
+        food_ids = self.cart.keys()
+        foods = Food.objects.filter(id__in=food_ids)
+
+        total = Decimal('0.00')
+
+        for food in foods:
+            food_id = str(food.id)
+            item = self.cart.get(food_id)
+
+            # Safe check to skip bad entries
+            if not isinstance(item, dict):
+                continue
+
+            quantity = item.get('quantity', 0)
+            total += Decimal(item['price']) * quantity
+
+        return total
+
+
+    def __len__(self):
+        return len(self.cart)
+    
+
+    def get_prods(self):
+        food_ids = self.cart.keys()
+        food = Food.objects.filter(id__in=food_ids)
+
+        return food
+    
+    def get_quantities(self):
+        quantities = self.cart
+        return quantities
+    
+
+    def update(self, food, quantity):
+        food_id = str(food.id)
+        food_qty = int(quantity)
+
+        if food_id in self.cart:
+            self.cart[food_id] = {
+                'price': str(food.price),
+                'quantity': food_qty
+            }  # ✅ Update quantity only
+            self.session.modified = True
+
+            if self.request.user.is_authenticated:
+                current_user = User.objects.filter(id=self.request.user.id)
+                carty = str(self.cart).replace("'", '"')
+                current_user.update(old_cart=carty)
+
+        return self.cart
+
+    
+    
+    
+    
+    def delete(self, food_id):
+        food_id = str(food_id)
+        if food_id in self.cart:
+            del self.cart[food_id]
+        self.session.modified = True
+
+        if self.request.user.is_authenticated:
+            current_user = User.objects.filter(id=self.request.user.id)
+            carty = str(self.cart)
+            carty = carty.replace("\'", '\"')
+
+            current_user.update(old_cart=str(carty))
+        return{
+            'quantity': len(self.cart),
+            'total_price': self.cart_total()
+        }

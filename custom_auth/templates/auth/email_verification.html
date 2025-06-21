@@ -1,0 +1,22 @@
+{% load i18n %}
+{% autoescape off %}
+
+{% blocktranslate %}Welcome to {{ site_name }}  {{ first_name}}.{% endblocktranslate %}
+
+{% translate 'Hello' %} {{ user.get_full_name }} {% translate 'you have created an account with us ' %}
+{% translate "Please go to the following page and input the verification code" %}
+{% block reset_link %}
+{{ protocol }}://{{ domain }}{% url 'verify_email_page' %}
+{% endblock %}
+
+{% translate "verification code" %}
+{{verification_code}}
+
+{% translate 'If this is not you please ignore the link above' %}
+
+
+{% translate "Thanks for using our site!" %}
+
+{% blocktranslate %}The {{ site_name }} team{% endblocktranslate %}
+
+{% endautoescape %}

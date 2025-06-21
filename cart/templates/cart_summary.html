@@ -1,9 +1,108 @@
 {% extends "base.html" %}
-{% comment %} {% load sorl_thumbnail %}
-{% thumbnail item.image "100x100" crop="center" as im %}
-    <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}">
-{% endthumbnail %} {% endcomment %}
+{% load sorl_thumbnail %}
 {% block title %}Cart Summary{% endblock %}
 {% block content %}
- Cart Summary
-{%endblock%}
+Cart Summary
+
+<a href="#" class="btn btn-secondary">Home</a>
+
+{% if cart_items %}
+    {% for food in cart_items %}
+        <div class="single-cart-item" data-id="{{ food.id }}">
+            <div class="cart-item border-b border-gray-200 py-4">
+                {% with food_id=food.id|stringformat:"s" %}
+                    {% thumbnail food.image "100x100" crop="center" as im %}
+                        <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}">
+                    {% endthumbnail %}
+
+                    <h2 class="text-lg font-semibold">{{ food.name }}</h2>
+                    <p class="text-gray-600">Price:₦{{ food.price }}</p>
+                    <p class="text-gray-700">Quantity: {{ food.quantity }}</p>
+
+                    <div class="col-md-2">Quantity:</div>
+                    <div class="col-md-2">
+                        <select class="form-select form-select-sm" id="select{{ food.id }}">
+                            {% for key, value in quantities.items %}
+                                {% if key == food.id|slugify %}
+                                    <option selected>{{ value }}</option>
+                                {% endif %}
+                            {% endfor %}
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                            <option value="5">5</option>
+                        </select>
+                    </div>
+
+                    <button type="button" data-index="{{ food.id }}" class="update-cart">Update</button>
+                    <button type="button" data-index="{{ food.id }}" class="delete-cart">Remove</button>
+                {% endwith %}
+            </div>
+        </div>
+    {% endfor %}
+
+    <div class="cart-total mt-6">
+        <h3 class="text-xl font-bold">
+            Total: ₦<span id="cart-total">
+                    {{ total_price }}
+                </span>
+        </h3>
+    </div>
+{% else %}
+    <p>Your cart is empty.</p>
+{% endif %}
+
+<script>
+    $(document).on('click', '.update-cart', function(e) {
+        e.preventDefault();
+        console.log("update cart clicked");
+
+        var foodId = $(this).data('index');
+
+        $.ajax({
+            type: 'POST',
+            url: "/cart/update/" + foodId + "/",
+            data: {
+                'food_item_id': foodId,
+                'quantity': $('#select' + foodId + ' option:selected').val(),
+                'csrfmiddlewaretoken': '{{ csrf_token }}',
+                'action': 'post'
+            },
+            success: function(json) {
+                console.log("cart updated");
+                location.reload();  // optional
+            },
+            error: function(xhr, errmsg, err) {
+                console.error("Cart update failed:", errmsg);
+            }
+        });
+    });
+
+    $(document).on('click', '.delete-cart', function(e) {
+        e.preventDefault();
+        const foodId = $(this).data('index');
+        const $cartItem = $(this).closest('.single-cart-item');
+
+        $.ajax({
+            type: 'POST',
+            url: '/cart/delete/' + foodId + '/',
+            data: {
+                'food_item_id': foodId,
+                'action': 'post',
+                'csrfmiddlewaretoken': '{{ csrf_token }}'
+            },
+            success: function(json) {
+                console.log("Deleted:", json);
+                $cartItem.remove();
+                $('#cart-quantity').text(json.quantity);
+                $('#cart-total').text(json.total_price);
+                
+            },
+            error: function(xhr, errmsg, err) {
+                console.log("Error deleting item:", errmsg);
+            }
+        });
+    });
+</script>
+{% endblock %}

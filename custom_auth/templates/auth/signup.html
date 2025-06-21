@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{%block title%} Sign Up {%endblock%}
+
+{% block content %}
+
+<div>
+    <h3> Create your account</h3>
+    <br>
+    <hr>
+    <br>
+
+    <form action="{% url "signup" %}" method="post">
+        {% csrf_token %}
+
+        {% for form in form  %}
+        <div class="form-control">
+            {{form.label_tag}}
+            {{form}}
+            {{form.help_text}}
+            {{form.errors}}
+        </div>
+        {% endfor %}
+
+        <br>
+        <button type="submit">Register</button>
+    </form>
+    <br>
+    <hr>
+    <br>
+
+    <div >
+        <p>Already have an account</p>
+        <br>
+        <a  href="{% url 'login' %}">Login </a>
+
+    </div>
+</div>
+
+
+{% endblock %}
