@@ -1,4 +1,33 @@
 @import "tailwindcss";
+@layer utilities;
+
+@layer components{
+  .btn-primary{
+    @apply  bg-indigo-700 text-white hover:cursor-pointer hover:bg-indigo-500 active:cursor-pointer active:bg-indigo-500
+  }
+    
+
+  .form-control{
+
+    .form-div{
+      @apply border border-gray-400 border-solid mb-[1rem] rounded-[8px] p-[4px_6px] focus-within:border-[indigo] focus-within:outline-2 focus-within:outline-solid focus-within:outline-[#8843f7]
+    }
+
+    input{
+      @apply block w-full h-[1rem] font-bold text-sm focus:border-none focus:outline-none
+    }
+
+    label{
+      @apply block text-left text-sm text-gray-400
+    }
+
+    button{
+      @apply w-full  rounded-[2rem] py-[0.5rem]
+    }
+
+    @apply w-[40%]  mx-auto
+  }
+}
 
 /**
   * A catch-all path to Django template files, JavaScript, and Python files

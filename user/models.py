@@ -49,7 +49,7 @@ class CustomUserManager(BaseUserManager):
 
 class User(AbstractBaseUser, PermissionsMixin):
     DOB = models.DateField(verbose_name="D.O.B", auto_now=False, auto_now_add=False, null=True)
-    email = models.EmailField(verbose_name="Email Adress", max_length=254, unique=True)
+    email = models.EmailField(verbose_name="Email Address", max_length=254, unique=True)
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50)
     full_name = models.CharField(max_length=100)

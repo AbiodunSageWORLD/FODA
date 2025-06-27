@@ -92,6 +92,7 @@ class LoginView(View):
     def post(self, request):
         form = LoginForm(request, request.POST)
         next_url= request.POST.get("next", "")
+        email = request.POST.get("username", "")
 
         if form.is_valid():
             email = form.cleaned_data.get("username")

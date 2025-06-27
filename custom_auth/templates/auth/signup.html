@@ -4,36 +4,47 @@
 
 {% block content %}
 
-<div>
-    <h3> Create your account</h3>
-    <br>
-    <hr>
-    <br>
-
-    <form action="{% url "signup" %}" method="post">
-        {% csrf_token %}
-
-        {% for form in form  %}
-        <div class="form-control">
-            {{form.label_tag}}
-            {{form}}
-            {{form.help_text}}
-            {{form.errors}}
+<div class="flex">
+    <div class="w-[30%] relative bg-cover bg-[url(https://as2.ftcdn.net/jpg/04/91/68/89/1000_F_491688945_9lCRX2N6XQVeyJbnM9tWjm2TMTWIiogL.jpg)] ">
+        <div>
+            <img class="w-[inherit]" src="" alt="">
         </div>
-        {% endfor %}
 
+        <div class="absolute">
+
+        </div>
+
+    </div>
+
+    <div class="w-[70%] mx-auto p-[1rem] text-center">
+        <h1 class="text-2xl font-bold mb-[1rem]"> Create your account</h1>
+
+        <hr>
         <br>
-        <button type="submit">Register</button>
-    </form>
-    <br>
-    <hr>
-    <br>
 
-    <div >
-        <p>Already have an account</p>
+        <form action="{% url "signup" %}" method="post" class="form-control ">
+            {% csrf_token %}
+
+            {% for form in form  %}
+            <div class="form-div">
+                {{form.label_tag}}
+                {{form}}
+                {% comment %} {{form.help_text}} {% endcomment %}
+                <div class="text-sm text-red-500 font-light">
+                    {{form.errors}}
+                </div>
+            </div>
+            {% endfor %}
+
+            <button type="submit" class="btn-primary">Sign up</button>
+        </form>
         <br>
-        <a  href="{% url 'login' %}">Login </a>
+        <hr>
+        <br>
 
+        <div >
+            <p class="text-sm">Have an account? <a  href="{% url 'login' %}" class="text-indigo-700 font-bold">Log in </a></p>
+        </div>
     </div>
 </div>
 

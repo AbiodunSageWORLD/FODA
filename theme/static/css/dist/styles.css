@@ -7,9 +7,15 @@
       "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
     --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono",
       "Courier New", monospace;
+    --color-red-200: oklch(88.5% 0.062 18.334);
+    --color-red-400: oklch(70.4% 0.191 22.216);
+    --color-red-500: oklch(63.7% 0.237 25.331);
     --color-yellow-500: oklch(79.5% 0.184 86.047);
     --color-yellow-600: oklch(68.1% 0.162 75.834);
+    --color-indigo-500: oklch(58.5% 0.233 277.117);
+    --color-indigo-700: oklch(45.7% 0.24 277.023);
     --color-gray-200: oklch(92.8% 0.006 264.531);
+    --color-gray-400: oklch(70.7% 0.022 261.325);
     --color-gray-500: oklch(55.1% 0.027 264.364);
     --color-gray-600: oklch(44.6% 0.03 256.802);
     --color-gray-800: oklch(27.8% 0.033 256.848);
@@ -25,6 +31,7 @@
     --text-lg--line-height: calc(1.75 / 1.125);
     --text-2xl: 1.5rem;
     --text-2xl--line-height: calc(2 / 1.5);
+    --font-weight-light: 300;
     --font-weight-medium: 500;
     --font-weight-semibold: 600;
     --font-weight-bold: 700;
@@ -184,6 +191,9 @@
   }
 }
 @layer utilities {
+  .absolute {
+    position: absolute;
+  }
   .relative {
     position: relative;
   }
@@ -202,6 +212,15 @@
   .mx-auto {
     margin-inline: auto;
   }
+  .my-\[0\.5rem\] {
+    margin-block: 0.5rem;
+  }
+  .my-\[0rem\] {
+    margin-block: 0rem;
+  }
+  .my-\[1rem\] {
+    margin-block: 1rem;
+  }
   .mt-2 {
     margin-top: calc(var(--spacing) * 2);
   }
@@ -214,11 +233,23 @@
   .mt-6 {
     margin-top: calc(var(--spacing) * 6);
   }
+  .mb-0 {
+    margin-bottom: calc(var(--spacing) * 0);
+  }
+  .mb-\[0\.5\] {
+    margin-bottom: 0.5;
+  }
+  .mb-\[0\.5rem\] {
+    margin-bottom: 0.5rem;
+  }
+  .mb-\[0\.\] {
+    margin-bottom: 0.;
+  }
+  .mb-\[1rem\] {
+    margin-bottom: 1rem;
+  }
   .block {
     display: block;
-  }
-  .contents {
-    display: contents;
   }
   .flex {
     display: flex;
@@ -231,6 +262,21 @@
   }
   .aspect-square {
     aspect-ratio: 1 / 1;
+  }
+  .w-96 {
+    width: calc(var(--spacing) * 96);
+  }
+  .w-\[30\%\] {
+    width: 30%;
+  }
+  .w-\[50\%\] {
+    width: 50%;
+  }
+  .w-\[70\%\] {
+    width: 70%;
+  }
+  .w-\[inherit\] {
+    width: inherit;
   }
   .w-full {
     width: 100%;
@@ -255,6 +301,9 @@
   .rounded {
     border-radius: 0.25rem;
   }
+  .rounded-\[2rem\] {
+    border-radius: 2rem;
+  }
   .rounded-lg {
     border-radius: var(--radius-lg);
   }
@@ -271,17 +320,29 @@
   .bg-gray-200 {
     background-color: var(--color-gray-200);
   }
+  .bg-red-200 {
+    background-color: var(--color-red-200);
+  }
   .bg-white {
     background-color: var(--color-white);
   }
   .bg-yellow-500 {
     background-color: var(--color-yellow-500);
   }
+  .bg-\[url\(https\:\/\/as2\.ftcdn\.net\/jpg\/04\/91\/68\/89\/1000_F_491688945_9lCRX2N6XQVeyJbnM9tWjm2TMTWIiogL\.jpg\)\] {
+    background-image: url(https://as2.ftcdn.net/jpg/04/91/68/89/1000_F_491688945_9lCRX2N6XQVeyJbnM9tWjm2TMTWIiogL.jpg);
+  }
+  .bg-cover {
+    background-size: cover;
+  }
   .object-cover {
     object-fit: cover;
   }
   .p-4 {
     padding: calc(var(--spacing) * 4);
+  }
+  .p-\[1rem\] {
+    padding: 1rem;
   }
   .px-4 {
     padding-inline: calc(var(--spacing) * 4);
@@ -292,8 +353,14 @@
   .py-16 {
     padding-block: calc(var(--spacing) * 16);
   }
+  .py-\[0\.5rem\] {
+    padding-block: 0.5rem;
+  }
   .text-center {
     text-align: center;
+  }
+  .text-left {
+    text-align: left;
   }
   .text-2xl {
     font-size: var(--text-2xl);
@@ -315,6 +382,10 @@
     --tw-font-weight: var(--font-weight-bold);
     font-weight: var(--font-weight-bold);
   }
+  .font-light {
+    --tw-font-weight: var(--font-weight-light);
+    font-weight: var(--font-weight-light);
+  }
   .font-medium {
     --tw-font-weight: var(--font-weight-medium);
     font-weight: var(--font-weight-medium);
@@ -334,6 +405,15 @@
   }
   .text-gray-900 {
     color: var(--color-gray-900);
+  }
+  .text-indigo-700 {
+    color: var(--color-indigo-700);
+  }
+  .text-red-400 {
+    color: var(--color-red-400);
+  }
+  .text-red-500 {
+    color: var(--color-red-500);
   }
   .text-white {
     color: var(--color-white);
@@ -397,6 +477,86 @@
     .lg\:px-8 {
       padding-inline: calc(var(--spacing) * 8);
     }
+  }
+}
+@layer utilities;
+@layer components {
+  .btn-primary {
+    background-color: var(--color-indigo-700);
+    color: var(--color-white);
+  }
+  @media (hover: hover) {
+    .btn-primary:hover {
+      cursor: pointer;
+    }
+  }
+  @media (hover: hover) {
+    .btn-primary:hover {
+      background-color: var(--color-indigo-500);
+    }
+  }
+  .btn-primary:active {
+    cursor: pointer;
+  }
+  .btn-primary:active {
+    background-color: var(--color-indigo-500);
+  }
+  .form-control .form-div {
+    margin-bottom: 1rem;
+    border-radius: 8px;
+    border-style: var(--tw-border-style);
+    border-width: 1px;
+    --tw-border-style: solid;
+    border-style: solid;
+    border-color: var(--color-gray-400);
+    padding: 4px 6px;
+  }
+  .form-control .form-div:focus-within {
+    border-color: indigo;
+  }
+  .form-control .form-div:focus-within {
+    outline-style: var(--tw-outline-style);
+    outline-width: 2px;
+  }
+  .form-control .form-div:focus-within {
+    outline-color: #8843f7;
+  }
+  .form-control .form-div:focus-within {
+    --tw-outline-style: solid;
+    outline-style: solid;
+  }
+  .form-control input {
+    display: block;
+    height: 1rem;
+    width: 100%;
+    font-size: var(--text-sm);
+    line-height: var(--tw-leading, var(--text-sm--line-height));
+    --tw-font-weight: var(--font-weight-bold);
+    font-weight: var(--font-weight-bold);
+  }
+  .form-control input:focus {
+    --tw-border-style: none;
+    border-style: none;
+  }
+  .form-control input:focus {
+    --tw-outline-style: none;
+    outline-style: none;
+  }
+  .form-control label {
+    display: block;
+    text-align: left;
+    font-size: var(--text-sm);
+    line-height: var(--tw-leading, var(--text-sm--line-height));
+    color: var(--color-gray-400);
+  }
+  .form-control button {
+    width: 100%;
+    border-radius: 2rem;
+    padding-block: 0.5rem;
+  }
+  .form-control {
+    margin-inline: auto;
+    width: 40%;
   }
 }
 @property --tw-border-style {
@@ -473,6 +633,11 @@
   inherits: false;
   initial-value: 0 0 #0000;
 }
+@property --tw-outline-style {
+  syntax: "*";
+  inherits: false;
+  initial-value: solid;
+}
 @layer properties {
   @supports ((-webkit-hyphens: none) and (not (margin-trim: inline))) or ((-moz-orient: inline) and (not (color:rgb(from red r g b)))) {
     *, ::before, ::after, ::backdrop {
@@ -492,6 +657,7 @@
       --tw-ring-offset-width: 0px;
       --tw-ring-offset-color: #fff;
       --tw-ring-offset-shadow: 0 0 #0000;
+      --tw-outline-style: solid;
     }
   }
 }

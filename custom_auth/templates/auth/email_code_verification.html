@@ -3,30 +3,41 @@
 {%block title%} Enter code {%endblock%}
 
 {% block content %}
-<div>
-    <h3> Enter code sent to your email</h3>
-    
-    <hr>
-    <br>
+<div class="flex">
+    <div class="w-[30%] relative bg-cover bg-[url(https://as2.ftcdn.net/jpg/04/91/68/89/1000_F_491688945_9lCRX2N6XQVeyJbnM9tWjm2TMTWIiogL.jpg)] ">
+        <div>
+            <img class="w-[inherit]" src="" alt="">
+        </div>
 
-    <form action="" method="post">
-        {% csrf_token %}
+        <div class="absolute">
+
+        </div>
+
+    </div>
+
+    <div class="w-[70%] mx-auto p-[1rem] text-center  ">
+        <h1 class="text-2xl font-bold mb-[1rem]"> Enter code sent to your email</h1>
         
-        <label for="verification_code" >Code</label>
-        <input type="text" name="verification_code" required>
+
+        <form action="" method="post" class="form-control" >
+            {% csrf_token %}
+            
+            <div class="form-div">
+                <label for="verification_code" >Code</label>
+                <input type="text" name="verification_code" required>
+            </div>
+
+
+            <button type="submit" class="w-full  rounded-[2rem] py-[0.5rem] btn-primary">Submit</button>
+        </form>
 
         <br>
-        <button type="submit">Submit</button>
-    </form>
-
-    <br>
-    <hr>
-    <br>
-    <div id="other">
-        <p>Dont have an account</p>
+        <hr>
         <br>
-        <a  href="{% url 'signup' %}">Register </a>
 
+        <div >
+            <p class="text-sm">Back to <a  href="{% url 'login' %}" class="text-indigo-700 font-bold">Log in </a></p>
+        </div>
     </div>
 </div>
 {% endblock content %}
