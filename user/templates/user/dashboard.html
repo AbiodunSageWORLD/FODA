@@ -3,5 +3,284 @@
 {% block title %}Dashboard{% endblock title %}
 
 {% block content %}
+<section class="grid grid-cols-[70%_auto] gap-[1rem] mx-[1rem] mb-[2rem] max-sm:grid-cols-[auto_auto]">
+    <div class="bg-white rounded-lg shadow-[0_4px_8px_#000000] p-[1rem]" >
+        <h1 class="mb-[1rem] flex items-center">
+            <svg width=64 height=64 class="stroke-[#CC5500] fill-[#cc5500]" viewBox="0 0 32 32" enable-background="new 0 0 32 32" id="Stock_cut" 
+            version="1.1" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                <desc/>
+                <g>
+                <circle cx="16" cy="16" fill="none" r="15" stroke-linejoin="round" stroke-miterlimit="10" stroke-width="2"/>
+                <path d="M26,27L26,27   c0-5.523-4.477-10-10-10h0c-5.523,0-10,4.477-10,10v0" fill="none"  
+                stroke-linejoin="round" stroke-miterlimit="10" stroke-width="2"/>
+                <circle cx="16" cy="11" fill="none" r="6"  stroke-linejoin="round" stroke-miterlimit="10" stroke-width="2"/>
+                </g>
+            </svg>
+            <span>Profile</span>
+        </h1>
+        
+        <div class="grid grid-cols-[auto_auto_auto] gap-[0.5rem] max-sm:grid-cols-2">
+            <div>
+                <p class=" text-gray-400 text-sm">Full name</p>
+                <h3>{{user.full_name}}</h3>
+            </div>
 
+            <div>
+                <p class=" text-gray-400 text-sm">Email</p>
+                <h3>{{user.email}}</h3>
+            </div>
+
+            <div>
+                <p class=" text-gray-400 text-sm">Phone number</p>
+                <h3>{{user.phone.as_national}}</h3>
+            </div>
+
+            <div>
+                <p class=" text-gray-400 text-sm">Date of birth</p>
+                <h3>{{user.DOB}}</h3>
+            </div>
+
+            <div>
+                <p class=" text-gray-400 text-sm">Date joined</p>
+                <h3>{{user.date_joined}}</h3>
+            </div>
+
+            <div>
+                <p class=" text-gray-400 text-sm">Last signed in </p>
+                <h3>{{user.last_login}}</h3>
+            </div>
+
+            <div>
+                <p class=" text-gray-400 text-sm">Spent</p>
+                <h3>#dfghj,kg</h3>
+            </div>
+
+            <div>
+                <p class=" text-gray-400 text-sm">Food Bought</p>
+                <h3>50</h3>
+            </div>
+        </div>
+
+        <div class="text-right pt-[1rem] text-sm">
+            <a class="btn-primary p-[0.5rem_1rem] rounded-lg pl-[1rem]" href="{% url "edit_profile" %}">Edit Profile</a>
+            <a class="btn-primary p-[0.5rem_1rem] rounded-lg" href="{% url "delete_profile" %}">Delete Profile</a>
+        </div>
+    </div>
+
+    <div class="bg-white rounded-lg shadow-[0_4px_8px_#000000] p-[1rem] ">
+        <h1 class="mb-[1rem] flex items-center">
+            <svg width=64 height=64 class="stroke-[#CC5500] fill-[#CC5500]" data-name="Your Icons" id="Your_Icons" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+                <defs></defs><title/><path class="cls-1" d="M37,18H30.87l-4-7.95a1,
+                1,0,0,0-1.78.9L28.63,18H19.37l3.52-7a1,1,0,1,0-1.78-.9l-4,8H11a3,3,0,0,0-3,3v.45A2.55,2.55,0,0,0,10.55,24l3.56,
+                11.21A4,4,0,0,0,17.92,38H30.08a4,4,0,0,0,3.81-2.79L37.45,24A2.55,2.55,0,0,0,40,21.45V21A3,3,0,0,0,37,18Zm1,
+                3.45a.54.54,0,0,1-.55.55,2,2,0,0,0-1.9,1.39L32,34.61A2,2,0,0,1,30.08,36H17.92A2,2,0,0,1,16,34.61L12.45,23.39A2,
+                2,0,0,0,10.55,22a.54.54,0,0,1-.55-.55V21a1,1,0,0,1,1-1h5.13l-.76,1.52a1.48,1.48,0,0,0-.36.89.11.11,0,0,1,0,.05v0a1.5,
+                1.5,0,1,0,2.62-1L18.37,20H29.63l.75,1.51a1.5,1.5,0,1,0,2.62,1v0a.11.11,0,0,1,0-.05,1.48,1.48,0,0,0-.36-.89L31.87,
+                20H37a1,1,0,0,1,1,1Z"/><path class="cls-1" d="M24,25a1,1,0,0,0-1,1v6a1,1,0,0,0,2,0V26A1,1,0,0,0,24,25Z"/>
+                <path class="cls-1" d="M19,25.68a1,1,0,0,0-1.9.64l2,6A1,1,0,0,0,20,33a1.25,1.25,0,0,0,.32,0A1,1,0,0,0,21,31.68Z"/>
+                <path class="cls-1" d="M30.32,25.05a1,1,0,0,0-1.27.63l-2,6A1,1,0,0,0,27.68,33,1.25,1.25,0,0,0,28,33a1,1,0,0,0,
+                .95-.68l2-6A1,1,0,0,0,30.32,25.05Z"/>
+            </svg>
+            <span>Cart</span>
+        </h1>
+        
+        {% if cart %}
+        <div class="">
+            {% for item in cart %}
+            <div class="flex mb-[1rem]">
+                <img class="mr-4 size-[5rem] object-cover" src="{{item.food.image.url}}" alt="{{item.food.name}}">
+                <div>
+                    <h4>{{item.food.name}}</h4>
+                    <p>{{item.price}}</p>
+                </div>
+            </div>
+            {% endfor %}
+
+            <div class="flex mb-[1rem]">
+                <img class="mr-4 size-[5rem] object-cover" src="https://i.pinimg.com/736x/10/38/a7/1038a702899f4ea379153c2d44e8224e.jpg" alt="food image">
+                <div>
+                    <h4>Food name</h4>
+                    <p>price</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="mt-[1rem] text-right text-[0.8rem] font-[500] text-burntOrange-700">
+            <a href="{% url "cart_summary" %}">Complete Order</a>
+        </div>
+        {% else %}
+        <div class="m-[1rem_auto] text-center text-burntOrange-700 border border-solid border-burntOrange-700">
+            <h3> You do not have any items in cart</h3>
+            <p>Start shopping now</p>
+            <div class="py-4">
+                <a class="btn-primary p-[0.5rem_1rem] rounded" href="{% url "index" %}">Shop Now</a>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</section>
+
+<section class="mx-[1rem] bg-white rounded-lg shadow/90 p-[1rem] mb-[2rem]">
+    <h1 class="mb-[1rem] flex items-center">
+        <svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 101.57 122.88" width=64 height=64 class="stroke-[#CC5500] fill-[#CC5500] stroke-[0.5px]">
+            <title>my-orders</title>
+            <path d="M4.7,28.93H26.13V24.56a24.57,24.57,0,0,1,49.13,0v4.37h21.6a4.7,4.7,0,0,1,3.33,1.38,4.76,
+            4.76,0,0,1,1.38,3.32V106a16.93,16.93,0,0,1-16.88,16.88H16.88A16.93,16.93,0,0,1,0,106V33.63a4.71,4.71,
+            0,0,1,4.7-4.7ZM20.37,63.87h9.41A1.24,1.24,0,0,1,31,65.1v9.41a1.23,1.23,0,0,1-1.23,1.23H20.37a1.23,1.23
+            ,0,0,1-1.23-1.23V65.1a1.24,1.24,0,0,1,1.23-1.23Zm24,9.68c-1.74,0-3.14-1.67-3.14-3.74s1.4-3.75,
+            3.14-3.75h37c1.74,0,3.15,1.68,3.15,3.75a3.48,3.48,0,0,1-3.15,3.74ZM18.67,97.2a2,2,0,0,1,.39-2.93,2.32,
+            2.32,0,0,1,3.13-.1l2.19,2.25,5.48-5.61a2,2,0,0,1,2.94.31A2.33,2.33,0,0,1,33,94.25l-7.26,7.45a2,2,0,0,
+            1-2.94-.31l-.17-.2a2.16,2.16,0,0,1-.33-.27L18.67,97.2ZM44.11,100C42.38,100,41,98.32,41,96.26s1.41-3.75,
+            3.14-3.75h37c1.73,0,3.14,1.68,3.14,3.75S82.87,100,81.14,100Zm-12-71.07H69.27V24.56a18.58,18.58,0,0,0-37.15,
+            0v4.37Zm-6,11.61V34.91H6V106a10.93,10.93,0,0,0,10.89,10.89H84.69A11,11,0,0,0,95.58,106V34.91H75.26V40.6a6.84,
+            6.84,0,1,1-6-.1V34.91H32.12v5.65a6.84,6.84,0,1,1-6,0Z"/></svg>
+        <span>Order History</span>
+    </h1>
+    
+    {% if orders %}
+    <table class="dash-table">
+        <thead>
+            <tr class="">
+                <th class="pb-[0.5rem] font-medium">Name</th>
+                <th class="pb-[0.5rem] font-medium">Price</th>
+                <th class="pb-[0.5rem] font-medium">Date</th>
+                <th class="pb-[0.5rem] font-medium">Quantity</th>
+                <th class="pb-[0.5rem] font-medium">Status</th>
+                <th></th>
+            </tr>
+        </thead>
+
+        <tbody>
+            {% for order in orders %}
+            <tr>
+                <td class="flex items-center max-sm:block">
+                    <img src="{{order.food.image.url}}" alt="food image" class="mr-4 size-[5rem] object-cover max-sm:mb-4">
+                    <h3>{{order.food.name}}</h3>
+                </td>
+                <td class="text-[#CC5500]">₦{{order.total_price}}</td>
+                <td>{{order.order_date}}</td>
+                <td>{{order.quantity}}</td>
+                <td><p class="p-[0.5rem_1rem] bg-burntOrange-600 rounded-lg inline-block">pending</p></td>
+                <td>view detail</td>
+            </tr>
+            {% endfor %}
+
+            <tr>
+                <td class="flex items-center max-sm:block">
+                    <img src="https://i.pinimg.com/736x/10/38/a7/1038a702899f4ea379153c2d44e8224e.jpg" alt="food image" class="mr-4 size-[5rem] object-cover max-sm:mb-4">
+                    <h3>Jollof</h3>
+                </td>
+                <td class="text-[#CC5500]">#2000</td>
+                <td>23-24-53</td>
+                <td>2344</td>
+                <td><p class="p-[0.5rem_1rem] bg-green-600 rounded-lg inline-block">confirm</p></td>
+                <td>view detail</td>
+            </tr>
+
+            <tr>
+                <td class="flex items-center max-sm:block">
+                    <img src="https://i.pinimg.com/736x/10/38/a7/1038a702899f4ea379153c2d44e8224e.jpg" alt="food image" class="mr-4 size-[5rem] object-cover max-sm:mb-4">
+                    <h3>Jollof</h3>
+                </td>
+                <td class="text-[#CC5500]">#2000</td>
+                <td>23-24-53</td>
+                <td>2344</td>
+                <td><p class="p-[0.5rem_1rem] bg-red-400 rounded-lg inline-block">canceled</p></td>
+                <td>view detail</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="mt-[1rem] text-right text-[0.8rem] font-[500] text-burntOrange-700">
+        <a href="{% url "orders" %}">See All</a>
+    </div>
+
+    {% else %}
+    <div class="m-[1rem_auto] text-center text-burntOrange-700 border border-solid border-burntOrange-700">
+        <h3> You have no order history</h3>
+        <p>Start shopping now</p>
+        <div class="py-4">
+                <a class="btn-primary p-[0.5rem_1rem] rounded" href="{% url "index" %}">Shop Now</a>
+        </div>
+    </div>
+    {% endif %}
+
+</section>
+
+<section class="mx-[1rem] bg-white rounded-lg shadow/90 p-[1rem] mb-[1rem]">
+    <h1 class="mb-[1rem] flex items-center">
+        <svg class="svg-icon stroke-[#CC5500] fill-[#CC5500]" style="vertical-align: middle;overflow: hidden;" viewBox="0 0 1024 1024" height="64" width="64" version="1.1" xmlns="http://www.w3.org/2000/svg">
+                <path d="M525.822216 421.830471a15.156573 15.156573 0 0 0-10.37908 4.533651l-78.742832 
+                78.510279-48.510967-48.350663c-13.585148-14.154112-35.537681 7.696821-21.370022 21.252617l59.240005 
+                59.034546c5.861234 5.88607 15.393641 5.88607 21.340671 0l89.383816-89.167068c9.850756-9.543696 
+                2.621299-25.813362-10.961591-25.813362z m-447.214852 119.414738h89.559924a14.887895 14.887895 0 0 1 
+                14.926278 14.926278c0 8.277074-6.660493 14.92402-14.926278 14.924019H78.607364a14.887895 14.887895 0 0 
+                1-14.926277-14.924019 14.890153 14.890153 0 0 1 14.926277-14.926278z m0-119.414738h89.559924c8.265785 0 
+                14.926278 6.660493 14.926278 14.926278s-6.660493 14.926278-14.926278 14.926278H78.607364c-8.265785 
+                0-14.926278-6.662751-14.926277-14.926278s6.662751-14.926278 14.926277-14.926278z m0-119.412479h89.559924c8.265785 
+                0 14.926278 6.662751 14.926278 14.926278s-6.660493 14.926278-14.926278 14.926277H78.607364c-8.265785 
+                0-14.926278-6.660493-14.926277-14.926277s6.662751-14.926278 14.926277-14.926278z m716.47262 328.384883c-41.048957 
+                0-74.633646 33.584689-74.633646 74.633647s33.584689 74.633646 74.633646 74.633646 74.633646-33.584689 
+                74.633647-74.633646-33.584689-74.633646-74.633647-74.633647z m0 29.852556c24.896697 0 44.778833 19.882136 44.778833 
+                44.778833s-19.882136 44.778833-44.778833 44.778833-44.778833-19.882136-44.778833-44.778833 19.882136-44.778833 
+                44.778833-44.778833z m-388.087736-29.852556c-41.048957 0-74.633646 33.584689-74.633647 
+                74.633647S365.943291 780.06791 406.992248 780.06791s74.633646-33.584689 74.633646-74.633646-33.586947-74.631389-74.633646-74.631389z 
+                m0 29.852556c24.896697 0 44.778833 19.882136 44.778833 44.778833s-19.882136 44.778833-44.778833 
+                44.778833-44.778833-19.882136-44.778834-44.778833 19.879878-44.778833 44.778834-44.778833zM257.724955 242.712881c-24.533192 
+                0-44.778833 20.247899-44.778833 44.778833v328.382626c0 24.548997 20.245641 44.781091 44.778833 44.781091h59.705111c20.175649 
+                0.291255 20.175649-30.146069 0-29.854814h-59.705111c-8.541236 0-14.926278-6.382784-14.926278-14.926277V287.491714c0-8.543493 
+                6.385042-14.926278 14.926278-14.926278h388.089994c8.541236 0 14.926278 6.385042 14.926278 14.926278v343.308903h-164.191313c-19.708286 
+                0-19.358328 30.146069 0 29.854814h208.970146c19.708286 0 19.532178-29.854813 0-29.854814h-14.92402v-268.677514h126.174573l112.650386 
+                176.028928v77.722309c0 8.543493-6.385042 14.926278-14.926277 14.926277h-29.852556c-19.532178 0-19.532178 29.854813 0 29.854814h29.852556c24.546739 
+                0 44.781091-20.232094 44.78109-44.781091v-82.095657a15.149799 15.149799 0 0 0-2.332301-8.060325l-119.41248-186.579601a14.930793 14.930793 0 0 
+                0-12.593976-6.865952h-134.338757v-44.778833c0-24.533192-20.234352-44.778833-44.781091-44.778833h-388.092252z"  /></svg>
+        <span>Delivery Information</span>
+    </h1>
+    
+    {% if addresses %}
+    <table class="dash-table">
+        <thead >
+            <tr>
+                <th class="pb-[0.5rem]">Name</th>
+                <th class="pb-[0.5rem]">Street</th>
+                <th class="pb-[0.5rem]">City</th>
+                <th class="pb-[0.5rem]">State</th>
+                <th class="pb-[0.5rem]">Phone Number</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            {% for address in addresses %}
+            <tr>
+                <td>{{address.full_name}}</td>
+                <td>{{address.street}}</td>
+                <td>{{address.city}}</td>
+                <td>{{address.state}}</td>
+                <td>{{address.phone}}</td>
+            </tr>
+            {% endfor %}
+
+            <tr>
+                <td>Adeniyi Peace</td>
+                <td>12 Aladeola</td>
+                <td>ketu ikosi</td>
+                <td>lagos</td>
+                <td>356576879887</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="mt-[1rem] text-right text-[0.8rem] font-[500] text-burntOrange-700">
+        <a href="{% url "address_list" %}">See All</a>
+    </div>
+    {% else %}
+    <div class="m-[1rem_auto] text-center text-burntOrange-700 border border-solid border-burntOrange-700">
+        <h3> You do not have a delivery address Yet</h3>
+        <p>Add one now</p>
+        <div class="p-4">
+            <a class="btn-primary p-[0.5rem_1rem] rounded" href="{% url "add_address" %}">Add address</a>
+        </div>
+    </div>
+    {% endif %}
+</section>
 {% endblock content %}

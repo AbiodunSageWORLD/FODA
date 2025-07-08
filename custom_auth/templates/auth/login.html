@@ -1,67 +1,53 @@
-{% extends "base.html" %}
+{% extends "auth/auth_extend.html" %}
 
 {%block title%} Login {%endblock%}
 
-{% block content %}
-<div class="flex">
-    <div class="w-[30%] relative bg-cover bg-[url(https://as2.ftcdn.net/jpg/04/91/68/89/1000_F_491688945_9lCRX2N6XQVeyJbnM9tWjm2TMTWIiogL.jpg)] ">
-        <div>
-            <img class="w-[inherit]" src="" alt="">
-        </div>
+{% block form %}
+<h1 class="text-2xl font-bold mb-[1rem]"> Welcome back to FODA</h1>
+<p class="text-sm w-[50%] mx-auto text-center">
+    Lorem ipsum dolor sit amet, consectetur adipisicing elit. 
+    Dolorum accusantium fugiat iusto repellendus quia non modi provident magnam nulla, 
+    quibusdam nesciunt repudiandae nam, hic, repellat unde perspiciatis! Nobis, aperiam! Fuga.
+</p>
 
-        <div class="absolute">
+<hr>
+<br>
 
-        </div>
+<form action="" method="post" class="form-control ">
+    {% csrf_token %}
+    <input type="hidden" name="next" value="{{next}}">
 
+    <div class="text-red-400  bg-red-200 w-96  mb-[1rem]">
+    {{form.non_field_errors}}
     </div>
 
-    <div class="w-[70%] mx-auto p-[1rem] text-center  ">
-        <h1 class="text-2xl font-bold mb-[1rem]"> Welcome back to FODA</h1>
-        <p class="text-sm w-[50%] mx-auto text-center">
-            Lorem ipsum dolor sit amet, consectetur adipisicing elit. 
-            Dolorum accusantium fugiat iusto repellendus quia non modi provident magnam nulla, 
-            quibusdam nesciunt repudiandae nam, hic, repellat unde perspiciatis! Nobis, aperiam! Fuga.
-        </p>
-        
-        <hr>
-        <br>
-
-        <form action="" method="post" class="form-control ">
-            {% csrf_token %}
-            <input type="hidden" name="next" value="{{next}}">
-
-            <div class="text-red-400  bg-red-200 w-96  mb-[1rem]">
-            {{form.non_field_errors}}
-            </div>
-
-            {% for form in form  %}
-            <div class="form-div">
-                {{form.label_tag}}
-                {{form}}
-                {{form.errors}}
-            </div>
-            {% endfor %}
-
-            {% if login_attempt >= 3 %}
-            <div class="text-left ">
-                <a href="{% url 'password_reset' %}" class="font-bold text-indigo-700 text-left text-sm ">Forgot Password?</a>
-            </div>
-            {% endif %}
-
-            <br>
-            <button type="submit" class="btn-primary">Log in</button>
-        </form>
-
-
-        <br>
-        <hr>
-        <br>
-        <div>
-            <p class="text-sm">Don't have an account? <a  href="{% url 'signup' %}" class="text-indigo-700 font-bold">Sign up</a></p>
-            
-        </div>
-
+    {% for form in form  %}
+    <div class="form-div">
+        {{form.label_tag}}
+        {{form}}
+        {{form.errors}}
     </div>
+    {% endfor %}
+
+    {% if login_attempt >= 3 %}
+    <div class="text-left ">
+        <a href="{% url 'password_reset' %}" class="font-bold text-burntOrange-700 text-left text-sm ">Forgot Password?</a>
+    </div>
+    {% endif %}
+
+    <br>
+    <button type="submit" class="btn-primary">Log in</button>
+</form>
+
+
+<br>
+<hr>
+<br>
+<div>
+    <p class="text-sm">Don't have an account? <a  href="{% url 'signup' %}" class="text-burntOrange-700 font-bold">Sign up</a></p>
+    
 </div>
 
-{% endblock content %}
+
+
+{% endblock form %}

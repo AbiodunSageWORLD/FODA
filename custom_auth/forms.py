@@ -8,6 +8,9 @@ class SignUpForm(UserCreationForm):
     class Meta:
         model = User
         fields = ["email", "DOB", "first_name", "last_name", "password1", "password2"]
+        # widgets = {
+        #            "DOB":forms.DateInput({"type":"date"})
+        #         }
 
 class LoginForm(AuthenticationForm):
     username = forms.EmailField(required=True, widget=forms.EmailInput(attrs={"placeholder":"Email"}))

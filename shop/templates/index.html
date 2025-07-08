@@ -3,45 +3,66 @@
 {% load thumbnail %}
 
 {% block head %}
-  <link rel="stylesheet" href="{% static 'css/index.css' %}">
+<link rel="stylesheet" href="{% static 'css/detail.css' %}" />
 {% endblock %}
 
 {% block title %}Home{% endblock %}
 
 {% block content %}
-<div>
-  <h1 class="text-2xl font-bold text-center">{{ message }}</h1>
-</div>
 
-<div class="bg-white">
-  <div class="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
-    <!-- Horizontal scroll if needed on small screens -->
-    <div class="mt-6 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-      {% for item in food_items %}
-        <div class="group relative border border-gray-200 rounded-lg shadow-sm p-4 bg-white hover:shadow-lg transition">
-          {% thumbnail item.image "400x300" crop="center" as im %}
-            <img src="{{ im.url }}" alt="{{ item.name }}" class="aspect-square w-full rounded-md bg-gray-200 object-cover group-hover:opacity-75 lg:h-48">
-          {% endthumbnail %}
-          <div class="mt-4">
-            <h3 class="text-sm font-semibold text-gray-800 truncate">
-              <a href="#">{{ item.name }}</a>
-            </h3>
-            <p class="text-xs text-gray-500">{{ item.description }}</p>
-            <p class="mt-2 text-sm font-bold text-gray-900">₦{{ item.price }}</p>
-            <p class="text-xs text-gray-600">Vendor: {{ item.vendor }}</p>
-          </div>
-          <div class="mt-3">
-            <a href="{% url 'detail' item.id %}" 
-            class="block text-center w-full bg-yellow-500 hover:bg-yellow-600 text-white text-sm font-medium py-2 px-4 rounded position-absolute bottom-0 left-0 right-0">
-              <i class="fas fa-info-circle"></i>
-            Details
-            </a>    
+<!-- Hero Section -->
+<section class="bg-orange-50 py-12 ">
+  <div class="container mx-auto max-w-7xl px-4 text-center">
+    <h1 class="text-4xl md:text-5xl font-extrabold text-[#CC5500] mb-6">FODA</h1>
+    <p class="text-lg text-gray-700 mb-8 max-w-2xl mx-auto my-auto">Enjoy authentic flavors from our kitchen to your
+      table.
+      Hand-crafted with love, just for you.</p>
 
+    <img src="media/local/nkwobi.png" alt="Nkwobi dish" class="">
+  </div>
+</section>
 
-          </div>
+<!-- Testimonials Section -->
+<section class="bg-white py-12">
+  <div class="container mx-auto max-w-7xl px-4">
+    <h2 class="text-3xl font-bold text-center text-[#CC5500] mb-10">What Our Customers Say</h2>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+
+      <div class="bg-orange-100 p-6 rounded-xl shadow hover:shadow-md transition">
+        <div class="">
+          <img src="media/local/twins.png" alt="generated image of customer">
         </div>
-      {% endfor %}
+        <p class="text-gray-800 italic">"This is the best product I've ever used!"</p>
+        <p class="mt-4 text-sm text-gray-600 text-right">- Happy Customer</p>
+      </div>
+      <div class="bg-orange-100 p-6 rounded-xl shadow hover:shadow-md transition">
+        <div class="">
+          <img src="media/local/female.png" alt="generated image of customer">
+        </div>
+        <p class="text-gray-800 italic">"Amazing quality and fantastic support."</p>
+        <p class="mt-4 text-sm text-gray-600 text-right">- Satisfied Client</p>
+      </div>
+      <div class="bg-orange-100 p-6 rounded-xl shadow hover:shadow-md transition">
+        <div class="">
+          <img src="media/local/male.png" alt="generated image of customer">
+        </div>
+        <p class="text-gray-800 italic">"I keep coming back because of how good everything tastes!"</p>
+        <p class="mt-4 text-sm text-gray-600 text-right">- Loyal Foodie</p>
+      </div>
     </div>
   </div>
-</div>
+</section>
+
+<!-- Call to Action Section -->
+<section class="bg-orange-50 py-12">
+  <div class="container mx-auto max-w-7xl px-4 text-center">
+    <h2 class="text-3xl font-bold text-[#CC5500] mb-4">Don't Miss Out!</h2>
+    <p class="text-lg text-gray-700 mb-6">Grab your favorite meals now and enjoy exclusive offers just for you.</p>
+    <a href="{% url 'shop' %}"
+      class="inline-block bg-[#CC5500] hover:bg-orange-700 text-white font-semibold px-6 py-3 rounded-lg transition duration-300">
+      Shop Now
+    </a>
+  </div>
+</section>
+
 {% endblock %}

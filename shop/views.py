@@ -2,12 +2,22 @@ from django.shortcuts import render
 from .models import Food
 # Create your views here.
 
+
+
+
 def index(request):
+    context ={
+         'mesage':'somethongS'
+     }
+    return render(request, 'index.html', context)
+
+
+def shop(request):
     context = {
         'message': 'Welcome to the Food Delivery App!',
         'food_items': Food.objects.all()
     }
-    return render(request, 'index.html', context)
+    return render(request, 'shop.html', context)
 
 def food_detail(request, food_id):
     try:

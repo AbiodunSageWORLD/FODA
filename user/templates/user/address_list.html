@@ -1,0 +1,104 @@
+{% extends "base.html" %}
+
+{% block title %}My Address{% endblock title %}
+
+{% block content %}
+<section class="mx-[1rem] bg-white rounded-lg shadow/90 p-[1rem] mb-[1rem]">
+    <div class="flex justify-between items-center">
+        <h1 class="mb-[1rem] flex items-center">
+            <svg class="svg-icon stroke-[#CC5500] fill-[#CC5500]" style="vertical-align: middle;overflow: hidden;" viewBox="0 0 1024 1024" height="64" width="64" version="1.1" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M525.822216 421.830471a15.156573 15.156573 0 0 0-10.37908 4.533651l-78.742832 
+                    78.510279-48.510967-48.350663c-13.585148-14.154112-35.537681 7.696821-21.370022 21.252617l59.240005 
+                    59.034546c5.861234 5.88607 15.393641 5.88607 21.340671 0l89.383816-89.167068c9.850756-9.543696 
+                    2.621299-25.813362-10.961591-25.813362z m-447.214852 119.414738h89.559924a14.887895 14.887895 0 0 1 
+                    14.926278 14.926278c0 8.277074-6.660493 14.92402-14.926278 14.924019H78.607364a14.887895 14.887895 0 0 
+                    1-14.926277-14.924019 14.890153 14.890153 0 0 1 14.926277-14.926278z m0-119.414738h89.559924c8.265785 0 
+                    14.926278 6.660493 14.926278 14.926278s-6.660493 14.926278-14.926278 14.926278H78.607364c-8.265785 
+                    0-14.926278-6.662751-14.926277-14.926278s6.662751-14.926278 14.926277-14.926278z m0-119.412479h89.559924c8.265785 
+                    0 14.926278 6.662751 14.926278 14.926278s-6.660493 14.926278-14.926278 14.926277H78.607364c-8.265785 
+                    0-14.926278-6.660493-14.926277-14.926277s6.662751-14.926278 14.926277-14.926278z m716.47262 328.384883c-41.048957 
+                    0-74.633646 33.584689-74.633646 74.633647s33.584689 74.633646 74.633646 74.633646 74.633646-33.584689 
+                    74.633647-74.633646-33.584689-74.633646-74.633647-74.633647z m0 29.852556c24.896697 0 44.778833 19.882136 44.778833 
+                    44.778833s-19.882136 44.778833-44.778833 44.778833-44.778833-19.882136-44.778833-44.778833 19.882136-44.778833 
+                    44.778833-44.778833z m-388.087736-29.852556c-41.048957 0-74.633646 33.584689-74.633647 
+                    74.633647S365.943291 780.06791 406.992248 780.06791s74.633646-33.584689 74.633646-74.633646-33.586947-74.631389-74.633646-74.631389z 
+                    m0 29.852556c24.896697 0 44.778833 19.882136 44.778833 44.778833s-19.882136 44.778833-44.778833 
+                    44.778833-44.778833-19.882136-44.778834-44.778833 19.879878-44.778833 44.778834-44.778833zM257.724955 242.712881c-24.533192 
+                    0-44.778833 20.247899-44.778833 44.778833v328.382626c0 24.548997 20.245641 44.781091 44.778833 44.781091h59.705111c20.175649 
+                    0.291255 20.175649-30.146069 0-29.854814h-59.705111c-8.541236 0-14.926278-6.382784-14.926278-14.926277V287.491714c0-8.543493 
+                    6.385042-14.926278 14.926278-14.926278h388.089994c8.541236 0 14.926278 6.385042 14.926278 14.926278v343.308903h-164.191313c-19.708286 
+                    0-19.358328 30.146069 0 29.854814h208.970146c19.708286 0 19.532178-29.854813 0-29.854814h-14.92402v-268.677514h126.174573l112.650386 
+                    176.028928v77.722309c0 8.543493-6.385042 14.926278-14.926277 14.926277h-29.852556c-19.532178 0-19.532178 29.854813 0 29.854814h29.852556c24.546739 
+                    0 44.781091-20.232094 44.78109-44.781091v-82.095657a15.149799 15.149799 0 0 0-2.332301-8.060325l-119.41248-186.579601a14.930793 14.930793 0 0 
+                    0-12.593976-6.865952h-134.338757v-44.778833c0-24.533192-20.234352-44.778833-44.781091-44.778833h-388.092252z"  /></svg>
+            <span>Delivery Information</span>
+        </h1>
+
+        <div class="min-w-[9rem]">
+            <a class="btn-primary p-[0.5rem_1rem] rounded-lg" href="{% url "add_address" %}"> &plus; Add Address</a>
+        </div>
+    </div>
+    
+    <hr>
+
+    {% if user.address.all %}
+    <div>
+        {% for address in user.address.all %}
+        <div class="flex items-center justify-between mt-[1rem]">
+                <div>
+                    <h4>{{address.full_name}}</h4>
+                    <p>{{address.phone}}</p>
+                    <address>
+                        {{address.street}} {{address.city}} {{address.state}}
+                    </address>
+                </div>
+            
+                <div class="text-right pt-[1rem] text-sm min-w-[10rem]">
+                    <a class="btn-primary p-[0.5rem_1rem] rounded-lg pl-[1rem]" href="{% url "edit_address" address.pk %}">Edit</a>
+                    <a class="btn-primary p-[0.5rem_1rem] rounded-lg" href="{% url "delete_address" address.pk %}">Delete</a>
+                </div>
+        </div>
+        {% endfor %}
+
+        <div class="flex items-center justify-between mt-[1rem]">
+            <div>
+                <h4>Adeniyi Peace</h4>
+                <p>356576879887</p>
+                <address>
+                    12 Aladeola ketu ikosi Lagos dfghjktjerew dfdhgh
+                </address>
+            </div>
+        
+            <div class="text-right pt-[1rem] text-sm min-w-[10rem]">
+                <a class="btn-primary p-[0.5rem_1rem] rounded-lg pl-[1rem]" href="{% url "edit_address" 1 %}">Edit</a>
+                <a class="btn-primary p-[0.5rem_1rem] rounded-lg" href="{% url "delete_address" 1 %}">Delete</a>
+            </div>
+        </div>
+
+        <div class="flex items-center justify-between mt-[1rem]">
+            <div>
+                <h4>Adeniyi Peace</h4>
+                <p>356576879887</p>
+                <address>
+                    12 Aladeola ketu ikosi Lagos
+                </address>
+            </div>
+        
+            <div class="text-right pt-[1rem] text-sm min-w-[10rem]">
+                <a class="btn-primary p-[0.5rem_1rem] rounded-lg pl-[1rem]" href="{% url "edit_address" 1 %}">Edit</a>
+                <a class="btn-primary p-[0.5rem_1rem] rounded-lg" href="{% url "delete_address" 1 %}">Delete</a>
+            </div>
+        </div>
+        
+        {% else %}
+        <div class="m-[1rem_auto] text-center text-burntOrange-700 border border-solid border-burntOrange-700">
+            <h3> You do not have a delivery address Yet</h3>
+            <p>Add one now</p>
+            <div class="p-4">
+                <a class="btn-primary p-[0.5rem_1rem] rounded" href="{% url "add_address" %}">Add address</a>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</section>
+{% endblock content %}

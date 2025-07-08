@@ -2,106 +2,122 @@
 {% load sorl_thumbnail %}
 {% block title %}Cart Summary{% endblock %}
 {% block content %}
-Cart Summary
 
-<a href="#" class="btn btn-secondary">Home</a>
+
 
 {% if cart_items %}
-    {% for food in cart_items %}
-        <div class="single-cart-item" data-id="{{ food.id }}">
-            <div class="cart-item border-b border-gray-200 py-4">
-                {% with food_id=food.id|stringformat:"s" %}
-                    {% thumbnail food.image "100x100" crop="center" as im %}
-                        <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}">
-                    {% endthumbnail %}
+{% for food in cart_items %}
+<div class="single-cart-item bg-white shadow-sm rounded-md mb-4 p-4 border border-gray-200" data-id="{{ food.id }}">
+    <div class="cart-item flex flex-col sm:flex-row gap-4 items-start sm:items-center border-b border-gray-100 pb-4">
 
-                    <h2 class="text-lg font-semibold">{{ food.name }}</h2>
-                    <p class="text-gray-600">Price:₦{{ food.price }}</p>
-                    <p class="text-gray-700">Quantity: {{ food.quantity }}</p>
+        {% with food_id=food.id|stringformat:"s" %}
+        {% thumbnail food.image "100x100" crop="center" as im %}
+        <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}"
+            class="w-24 h-24 object-cover rounded-md border border-gray-200" />
+        {% endthumbnail %}
 
-                    <div class="col-md-2">Quantity:</div>
-                    <div class="col-md-2">
-                        <select class="form-select form-select-sm" id="select{{ food.id }}">
-                            {% for key, value in quantities.items %}
-                                {% if key == food.id|slugify %}
-                                    <option selected>{{ value }}</option>
-                                {% endif %}
-                            {% endfor %}
-                            <option value="1">1</option>
-                            <option value="2">2</option>
-                            <option value="3">3</option>
-                            <option value="4">4</option>
-                            <option value="5">5</option>
-                        </select>
-                    </div>
+        <div class="flex-1 space-y-1">
+            <h2 class="text-lg font-semibold text-gray-800">{{ food.name }}</h2>
+            <p class="text-sm text-gray-600">Price: ₦{{ food.price }}</p>
+            <p class="text-sm text-gray-700">Quantity: {{ food.quantity }}</p>
 
-                    <button type="button" data-index="{{ food.id }}" class="update-cart">Update</button>
-                    <button type="button" data-index="{{ food.id }}" class="delete-cart">Remove</button>
-                {% endwith %}
+            <div class="flex items-center gap-2 mt-2">
+                <label for="select{{ food.id }}" class="text-sm font-medium text-gray-700">Change Qty:</label>
+                <select
+                    class="form-select form-select-sm rounded-md border-gray-300 focus:ring-orange-500 focus:border-orange-500 text-sm"
+                    id="select{{ food.id }}">
+                    {% for key, value in quantities.items %}
+                    {% if key == food.id|slugify %}
+                    <option selected>{{ value }}</option>
+                    {% endif %}
+                    {% endfor %}
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                </select>
+            </div>
+
+            <div class="mt-3 flex gap-3">
+                <button type="button" data-index="{{ food.id }}"
+                    class="update-cart bg-orange-500 text-white text-xs font-semibold px-4 py-1 rounded hover:bg-orange-600">
+                    Update
+                </button>
+                <button type="button" data-index="{{ food.id }}"
+                    class="delete-cart bg-red-100 text-red-600 text-xs font-semibold px-4 py-1 rounded hover:bg-red-200">
+                    Remove
+                </button>
             </div>
         </div>
-    {% endfor %}
-
-    <div class="cart-total mt-6">
-        <h3 class="text-xl font-bold">
-            Total: ₦<span id="cart-total">
-                    {{ total_price }}
-                </span>
-        </h3>
+        {% endwith %}
     </div>
+</div>
+{% endfor %}
+
+<div class="cart-total mt-6 bg-white p-6 rounded-md shadow border border-gray-200 text-right">
+    <h3 class="text-xl font-bold text-gray-800">
+        Total: <span class="text-orange-600" id="cart-total">₦{{ total_price }}</span>
+    </h3>
+</div>
+
 {% else %}
-    <p>Your cart is empty.</p>
+<p
+    class="text-center text-orange-600 text-base font-medium mt-10 bg-orange-50 border border-orange-200 rounded-lg px-4 py-3 shadow-sm">
+    🛒 Your cart is currently empty.
+    <a href="{% url 'shop' %}" class="underline hover:text-orange-700">Continue shopping</a>
+</p>
+
 {% endif %}
 
 <script>
-    $(document).on('click', '.update-cart', function(e) {
+    $(document).on("click", ".update-cart", function (e) {
         e.preventDefault();
         console.log("update cart clicked");
 
-        var foodId = $(this).data('index');
+        var foodId = $(this).data("index");
 
         $.ajax({
-            type: 'POST',
+            type: "POST",
             url: "/cart/update/" + foodId + "/",
             data: {
-                'food_item_id': foodId,
-                'quantity': $('#select' + foodId + ' option:selected').val(),
-                'csrfmiddlewaretoken': '{{ csrf_token }}',
-                'action': 'post'
+                food_item_id: foodId,
+                quantity: $("#select" + foodId + " option:selected").val(),
+                csrfmiddlewaretoken: "{{ csrf_token }}",
+                action: "post",
             },
-            success: function(json) {
+            success: function (json) {
                 console.log("cart updated");
-                location.reload();  // optional
+                location.reload(); // optional
             },
-            error: function(xhr, errmsg, err) {
+            error: function (xhr, errmsg, err) {
                 console.error("Cart update failed:", errmsg);
-            }
+            },
         });
     });
 
-    $(document).on('click', '.delete-cart', function(e) {
+    $(document).on("click", ".delete-cart", function (e) {
         e.preventDefault();
-        const foodId = $(this).data('index');
-        const $cartItem = $(this).closest('.single-cart-item');
+        const foodId = $(this).data("index");
+        const $cartItem = $(this).closest(".single-cart-item");
 
         $.ajax({
-            type: 'POST',
-            url: '/cart/delete/' + foodId + '/',
+            type: "POST",
+            url: "/cart/delete/" + foodId + "/",
             data: {
-                'food_item_id': foodId,
-                'action': 'post',
-                'csrfmiddlewaretoken': '{{ csrf_token }}'
+                food_item_id: foodId,
+                action: "post",
+                csrfmiddlewaretoken: "{{ csrf_token }}",
             },
-            success: function(json) {
+            success: function (json) {
                 console.log("Deleted:", json);
                 $cartItem.remove();
-                $('#cart-quantity').text(json.quantity);
-                $('#cart-total').text(json.total_price);
-                
+                $("#cart-quantity").text(json.quantity);
+                $("#cart-total").text(json.total_price);
             },
-            error: function(xhr, errmsg, err) {
+            error: function (xhr, errmsg, err) {
                 console.log("Error deleting item:", errmsg);
-            }
+            },
         });
     });
 </script>

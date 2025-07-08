@@ -6,7 +6,7 @@ from django.utils.translation import gettext_lazy as _
 import uuid # For generating unique codes
 from datetime import timedelta
 
-from phonenumber_field.formfields import PhoneNumberField
+from phonenumber_field.modelfields import PhoneNumberField
 
 # Create your models here.
 
@@ -53,6 +53,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50)
     full_name = models.CharField(max_length=100)
+    phone = PhoneNumberField(region="NG", null=True, blank=True)
     is_active = models.BooleanField(default=False)
     is_staff = models.BooleanField(default=False)
     is_vendor = models.BooleanField(default=False)
@@ -120,12 +121,21 @@ class Address(models.Model):
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50)
     full_name = models.CharField(max_length=100)
-    phone = PhoneNumberField(region="NG")
+    phone = PhoneNumberField(region="NG", null=True)
+    street = models.CharField( max_length=50,)
     city = models.CharField( max_length=50)
     state = models.CharField(max_length=50)
     country = models.CharField( max_length=50)
 
+    
+    class Meta:
+        verbose_name = "Address"
+        verbose_name_plural = "Addresses"
+
+
     def save(self, *args, **kwargs):
+        self.first_name = self.first_name.strip().capitalize()
+        self.last_name = self.last_name.strip().capitalize()
         self.full_name = f"{self.last_name} {self.first_name}"
         super().save(*args, **kwargs)
     

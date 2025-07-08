@@ -14,7 +14,14 @@ from .models import Address
 
 class DashboardView(LoginRequiredMixin, View):
     def get(self, request):
-        return render(request, "user/dashboard.html")
+        orders = request.user.order.all()
+        addresses = request.user.address.all()
+
+        context = {
+            "orders":orders,
+            "addresses": addresses
+        }
+        return render(request, "user/dashboard.html", context=context)
     
 
 class EditUserProfileView(LoginRequiredMixin, View):
@@ -48,11 +55,14 @@ class EditUserProfileView(LoginRequiredMixin, View):
 
 class DeleteUserProfileView(LoginRequiredMixin, View):
     def get(self, request):
+        return render(request, "user/delete_profile.html")
+
+    def post(self, request):
         user = request.user
         logout(request)
         user.delete()
         messages.success(request, "Your have succefully deleted Your account")
-        return redirect(reverse(""))
+        return redirect(reverse("index"))
     
 
 
