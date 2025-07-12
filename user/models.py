@@ -3,6 +3,11 @@ from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseU
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
+from django.core.mail import send_mail, EmailMultiAlternatives
+from django.template import Context
+from django.template.loader import get_template
+from foda.settings import EMAIL_HOST_USER
+
 import uuid # For generating unique codes
 from datetime import timedelta
 
@@ -105,6 +110,26 @@ class User(AbstractBaseUser, PermissionsMixin):
         self.verification_code = unique_code()
         self.verification_code_expires_at = timezone.now() + timedelta(minutes=10) # Code expires in 10 minutes
         self.save()
+        self.send_verification_code()
+        
+    def send_verification_code(self):
+        htmly = get_template("auth/email_verification.html")
+
+        data = {
+            "first_name":self.first_name,
+            "verification_code": self.verification_code
+        }
+
+        html_content = htmly.render(data)
+
+        subject = "Welcome"
+
+        msg =EmailMultiAlternatives(subject=subject, body=html_content, 
+                                    from_email=EMAIL_HOST_USER, to=[self.email])
+        
+        msg.attach_alternative(html_content, "text/html")
+
+        msg.send()
 
     def is_verification_code_valid(self):
         return self.verification_code and self.verification_code_expires_at and \

@@ -102,11 +102,11 @@
 
       <!-- Navigation Links -->
       <div class="space-x-4">
-        <a href="/custom_auth/templates/auth/login.html"
+        <a href="{% url "login" %}"
           class="bg-white text-amber-700 font-medium px-4 py-2 rounded-md hover:bg-amber-100 transition">
           Log In
         </a>
-        <a href="/register" class="border border-white px-4 py-2 rounded-md hover:bg-amber-800 transition">
+        <a href="{% url "signup" %}" class="border border-white px-4 py-2 rounded-md hover:bg-amber-800 transition">
           Register
         </a>
       </div>
@@ -118,7 +118,7 @@
   <!-- for success messages -->
   {% if request.path != '/cart/summary/' %}
   {% if messages %}
-  <div class="fixed top-5 right-5 z-50 space-y-4">
+  <div class="fixed top-5 right-5 z-50 space-y-4 transition-opacity opacity-100 duration-1000" id="message">
     {% for message in messages %}
     <div class="px-4 py-3 rounded-lg shadow-lg border text-sm font-medium
         {% if message.tags == 'success' %}
@@ -207,6 +207,25 @@
     </div>
   </footer>
 
+  {% block scripts %}{% endblock scripts %}
+
+  <script>
+    const message = document.getElementById("message")
+
+    if (message){
+      window.addEventListener("load", () => {
+        setTimeout(() => {
+          message.classList.replace("opacity-100", "opacity-0")
+
+          setTimeout(() => {
+            message.classList.add("hidden")
+          }, 1000)
+          
+        }, 5000)
+      })
+    }
+    
+  </script>
 
 </body>
 
