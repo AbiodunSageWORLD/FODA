@@ -3,10 +3,15 @@ from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseU
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
+from django.core.mail import send_mail, EmailMultiAlternatives
+from django.template import Context
+from django.template.loader import get_template
+from foda.settings import EMAIL_HOST_USER
+
 import uuid # For generating unique codes
 from datetime import timedelta
 
-from phonenumber_field.formfields import PhoneNumberField
+from phonenumber_field.modelfields import PhoneNumberField
 
 # Create your models here.
 
@@ -53,6 +58,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50)
     full_name = models.CharField(max_length=100)
+    phone = PhoneNumberField(region="NG", null=True, blank=True)
     is_active = models.BooleanField(default=False)
     is_staff = models.BooleanField(default=False)
     is_vendor = models.BooleanField(default=False)
@@ -104,6 +110,26 @@ class User(AbstractBaseUser, PermissionsMixin):
         self.verification_code = unique_code()
         self.verification_code_expires_at = timezone.now() + timedelta(minutes=10) # Code expires in 10 minutes
         self.save()
+        self.send_verification_code()
+        
+    def send_verification_code(self):
+        htmly = get_template("auth/email_verification.html")
+
+        data = {
+            "first_name":self.first_name,
+            "verification_code": self.verification_code
+        }
+
+        html_content = htmly.render(data)
+
+        subject = "Welcome"
+
+        msg =EmailMultiAlternatives(subject=subject, body=html_content, 
+                                    from_email=EMAIL_HOST_USER, to=[self.email])
+        
+        msg.attach_alternative(html_content, "text/html")
+
+        msg.send()
 
     def is_verification_code_valid(self):
         return self.verification_code and self.verification_code_expires_at and \
@@ -120,12 +146,21 @@ class Address(models.Model):
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50)
     full_name = models.CharField(max_length=100)
-    phone = PhoneNumberField(region="NG")
+    phone = PhoneNumberField(region="NG", null=True)
+    street = models.CharField( max_length=50,)
     city = models.CharField( max_length=50)
     state = models.CharField(max_length=50)
     country = models.CharField( max_length=50)
 
+    
+    class Meta:
+        verbose_name = "Address"
+        verbose_name_plural = "Addresses"
+
+
     def save(self, *args, **kwargs):
+        self.first_name = self.first_name.strip().capitalize()
+        self.last_name = self.last_name.strip().capitalize()
         self.full_name = f"{self.last_name} {self.first_name}"
         super().save(*args, **kwargs)
     

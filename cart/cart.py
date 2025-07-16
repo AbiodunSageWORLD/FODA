@@ -15,6 +15,16 @@ class Cart():
 
         self.cart = cart  
 
+    # loop through items in cart
+    def __iter__(self):
+        for food_id, detail in self.cart.items():
+            food = Food.objects.get(id=food_id)
+            price = detail.get("price")
+            quantity = detail.get("quantity")
+            total_price = float(price)*float(quantity)
+
+            yield {"food":food, "price":price, "quantity":quantity, "total":total_price}
+
     def db_add(self, food, quantity):
         food_id = str(food.id)
         food_qty = int(quantity)

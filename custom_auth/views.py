@@ -1,19 +1,18 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse_lazy, reverse
+from django.http import JsonResponse
 from django.views import View
 from django.contrib.auth import login, logout, authenticate
 from django.contrib import messages
 from django.contrib.auth.views import PasswordResetView, PasswordResetConfirmView, PasswordChangeView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.messages.views import SuccessMessageMixin
+from django.core.validators import EmailValidator
+from django.core.exceptions import ValidationError
 
-from django.core.mail import send_mail, EmailMultiAlternatives
-from django.template import Context
-from django.template.loader import get_template
 
 from user.models import User
 from .forms import SignUpForm, LoginForm
-from foda.settings import EMAIL_HOST_USER
 
 from axes.models import AccessAttempt
 
@@ -43,23 +42,7 @@ class SignUpView(View):
 
             user.generate_verification_code()
 
-            htmly = get_template("auth/email_verification.html")
-
-            data = {
-                "first_name":first_name,
-                "verification_code": user.verification_code
-            }
-
-            html_content = htmly.render(data)
-
-            subject = "Welcome"
-
-            msg =EmailMultiAlternatives(subject=subject, body=html_content, 
-                                        from_email=EMAIL_HOST_USER, to=[email])
-            
-            msg.attach_alternative(html_content, "text/html")
-
-            msg.send()
+            # check user model for email generation code 
 
             messages.success(request, "Check your email for the confirmation Code")
 
@@ -158,6 +141,26 @@ class EmailAuthenticationView(View):
         except User.DoesNotExist:
             messages.error(request, "The verification code is invalid or has expired. Please request a new one.")
             return render(request, "auth/email_code_verification.html")
+
+
+class RefreshCodeEmailAuthenticationView(View):
+    def post(self, request):
+        email = request.POST.get("email")
+
+        try:
+            validate_email = EmailValidator()
+
+            if validate_email(email):
+                user = get_object_or_404(User, email=email)
+
+                if user:
+                    user.generate_verification_code()
+
+
+        except ValidationError as e:
+            return JsonResponse({"status":"Error", "message":e.message})
+
+        return JsonResponse({"status":"Success", "message":"New confirmation Code has been sent"})
         
 
 class LogoutView(View):
