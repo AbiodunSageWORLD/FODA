@@ -1,0 +1,182 @@
+{% extends "base.html" %}
+
+{% block title %}Checkout{% endblock title %}
+
+{% block content %}
+<section>
+    <h1 class="text-4xl font-semibold text-center my-4">Checkout</h1>
+    
+    <div class="flex justify-around max-md:flex-col-reverse max-md:px-8">
+        <div>
+            <div>
+                <h2 class="text-2xl my-2">Choose Address</h2>
+                <form action="" method="post" id="form-1">
+                    {% csrf_token %}
+                    <ul id="address-list" class="max-md:text-center">
+                        {% for address in addresses %}
+                        <li class="flex gap-4 my-4 p-4 shadow max-md:px-8 hover:cursor-pointer hover:ring-burntOrange-500 hover:ring-2 rounded-xl max-md:inline-flex max-md:text-left">
+                            <input type="radio" name="address_id" value="{{address.id}}" required >
+
+                            <div class="w-[200px]">
+                                <h1 class="font-bold">{{address.full_name}}</h1>
+                                <p>{{address.phone.as_national}}</p>
+                                <address>{{address.street}}, {{address.city}}, {{address.state}}</address>
+                            </div>
+
+                            <div class="flex gap-4">
+                                <p>edit</p>
+                                <a class="delete-address" href="{% url "delete_checkout_address" address.id %}">delete</a>
+                            </div>
+                        </li>
+                        {% empty %}
+                        Add New Address below
+                        {% endfor %}
+                    </ul>
+
+                    {% if addresses %}  {% endif %}
+                    <button type="submit" form="form-1" class="btn-primary py-2 w-full font-semibold mt-8 hidden max-md:block ">Place Order</button>
+
+                </form>
+            </div>
+
+            <h2 class="text-2xl text-center my-4 font-semibold">New Address</h1>
+
+            <form action="" method="post" class="w-full form-control" id="add_address">
+                {% csrf_token %}
+
+                <div class="text-red-800  bg-red-100 border-red-300 w-96  mb-[1rem]" id="form-errors">
+                {{form.non_field_errors}}
+                </div>
+
+                <div class="grid grid-cols-3 gap-2 w-[380px] max-md:w-full">
+                    {% for form in form  %}
+                    <div class="form-div">
+                        {{form.label_tag}}
+                        {{form}}
+                        {{form.errors}}
+                    </div>
+                    {% endfor %}
+                </div>
+
+                <button type="submit" class="btn-primary px-4 py-2">Add Address</button>
+            </form>
+        </div>
+
+        <div >
+            <div class="bg-orange-200 border-b-4 border-orange-900 p-4">
+                <h1 class="text-xl font-semibold text-burntOrange-600">Your order</h1>
+
+                <ul class="list-disc list-inside">
+                    {% for order in cart %}
+                    <li class="flex gap-8 my-4 ml-10">
+                        <div>
+                            {{order.quantity}}x {{order.food.name}}
+                        </div>
+
+                        <div class="text-right">
+                            {{order.total}}
+                        </div>
+                    </li>
+                    {% endfor %}
+                </ul>
+
+                <div class="text-right font-bold">
+                    Total: {{cart.cart_total}}
+                </div>
+            </div>
+
+            <button type="submit" form="form-1" class="btn-primary py-2 w-full font-semibold mt-8 max-md:hidden">Place Order</button>
+        </div>
+    </div>
+</section>
+{% endblock content %}
+
+{% block scripts %}
+<script>
+    function Update_address_list(response) {
+
+        hold = ""
+
+        for (const address of response.addresses ) {
+            hold += `
+            <li class="flex gap-4 my-4 p-4 shadow max-md:px-8 hover:cursor-pointer hover:ring-burntOrange-500 hover:ring-2 rounded-xl max-md:inline-flex max-md:text-left">
+                <input type="radio" name="address_id" value="{{address.id}} " required >
+
+                <div class="w-[200px]">
+                    <h1 class="font-bold">${address.full_name}</h1>
+                    <p>${address.phone}</p>
+                    <address>${address.street}, ${address.city}, ${address.state}</address>
+                </div>
+
+                <div class="flex gap-4">
+                    <p>edit</p>
+                    <a class="delete-address" href="/cart/checkout/delete-address/${address.id}/" >delete</a>
+                </div>
+            </li>
+            `
+        }
+
+        $("#address-list").html(hold)
+               
+    }
+
+    $(document).ready( function () {
+        $("#add_address").submit(function (e) {
+            e.preventDefault();
+            $("#form-errors").empty()
+            const form_data = new FormData(this)
+
+            $.ajax({
+                url: '{% url "add_checkout_address" %}',
+                type: "POST",
+                data: form_data,
+                processData: false,
+                contentType: false,
+                success: function (response) {
+                
+                    if (response.success === true) {
+                        // reset form
+                        $("#add_address")[0].reset()
+
+                        Update_address_list(response)
+                    }
+                    else {
+                        text = ""
+
+                        for (const key in response.errors){
+                            text += `
+                            ${response.errors[key]} in the ${key} field
+                            `
+                        }
+                        $("#form-errors").text(text)
+                    }
+                },
+                error: function (err) {
+                    console.error(err);
+                },
+            });
+        })
+        
+    });
+
+    $(document).on("click", ".delete-address", function(e) {
+            e.preventDefault()
+            get_url = $(this).attr("href")
+
+            $.ajax({
+                url: get_url,
+                type: "GET",
+
+                success: function(response) {
+                    if (response.success === true) {
+                        Update_address_list(response)
+                    }
+                },
+
+                error: function (err) {
+                    console.error(err);
+                },
+            })
+        })
+</script> 
+{% endblock scripts %}

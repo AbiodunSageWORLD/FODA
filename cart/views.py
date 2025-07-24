@@ -1,8 +1,15 @@
-from django.shortcuts import render, get_object_or_404
-from .cart import Cart
-from shop.models import Food
+from django.shortcuts import render, get_object_or_404, redirect
+from django.urls import reverse
 from django.http import JsonResponse
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
+from django.views.decorators.http import require_POST 
+from django.forms.models import model_to_dict
+
+from .cart import Cart
+from shop.models import Food, Order, OrderItem
+from user.models import Address
+from user.forms import Addressform
 
 # Create your views here.
 
@@ -80,4 +87,83 @@ def cart_update(request, food_id):
     response = JsonResponse({'cart_quantity': len(cart)})
     return response
 
+@login_required
+def checkout(request):
+    user = request.user
+    addresses = Address.objects.filter(user=user)
+    form = Addressform()
+    cart = Cart(request)
 
+    if request.method == "POST":
+        if id := request.POST.get("address_id"):
+            address = get_object_or_404(Address, user=user, id=id)
+            address_dict = model_to_dict(address, exclude=["id", "user", "full_name"])
+            order = Order.objects.create(**address_dict, user=user,) # add paid=True after implementing payment logic
+
+            for food in cart:
+                OrderItem.objects.create(
+                    order=order, food=food["food"], price=food["price"], 
+                    quantity=food["quantity"],
+                )
+
+            # payment logic here
+            
+            messages.success(request, "Your Order has been Created")
+
+            return redirect(reverse("index"))
+        
+        else:
+            messages.error(request, "Pick an Address or Add one")
+
+    context = {
+        "addresses":addresses,
+        "form":form,
+    }
+
+    return render(request, "cart/checkout.html", context)
+
+
+@require_POST
+def add_checkout_address(request):
+    form = Addressform(request.POST)
+
+    if form.is_valid():
+        address = form.save(commit=False)
+        address.user = request.user
+        address.save()
+
+        adrress_model = Address.objects.filter(user=request.user).values(
+            "id", "first_name", "last_name",
+            "full_name", "phone", "street", "city", "state", "country"
+        )
+
+        address_list = []
+        for addr in adrress_model:
+            addr["phone"] = str(addr["phone"].as_national)  # Make phone JSON-serializable
+            address_list.append(addr)
+
+        print(address_list)
+
+        return JsonResponse({"success":True, "addresses":list(address_list)})
+    
+    else:
+        return JsonResponse({"success":False, "errors":form.errors},)
+
+def  delete_checkout_address(request, id):
+    user = request.user
+    address = get_object_or_404(Address, id=id, user=user)
+
+    address.delete()
+
+    adrress_model = Address.objects.filter(user=request.user).values(
+        "id", "first_name", "last_name",
+        "full_name", "phone", "street", "city", "state", "country"
+    )
+
+    address_list = []
+    for addr in adrress_model:
+        addr["phone"] = str(addr["phone"].as_national)  # Make phone JSON-serializable
+        address_list.append(addr)
+
+    return JsonResponse({"success":True, "addresses":list(address_list)})
+    

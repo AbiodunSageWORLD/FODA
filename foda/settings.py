@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'custom_auth',
     'user',
     'vendor',
+    'vendor_auth',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',

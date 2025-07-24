@@ -46,7 +46,7 @@ class SignUpView(View):
 
             messages.success(request, "Check your email for the confirmation Code")
 
-            # redirects user to authenrication page
+            # redirects user to authentication page
             return redirect(reverse("verify_email_page"))
         
         context = {

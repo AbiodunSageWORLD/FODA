@@ -11,7 +11,7 @@ from .forms import EditUserForm, Addressform
 from .models import Address
 
 # Create your views here.
-
+# you won a soul and stole a heart,evangelism is powerful
 class DashboardView(LoginRequiredMixin, View):
     def get(self, request):
         orders = request.user.order.all()
@@ -42,7 +42,7 @@ class EditUserProfileView(LoginRequiredMixin, View):
         if form.is_valid():
             form.save()
 
-            messages.success(request, "Your have succefully edited Your profile")
+            messages.success(request, "Your have successfully edited Your profile")
 
             return redirect(reverse("dashboard"))
 
@@ -61,7 +61,7 @@ class DeleteUserProfileView(LoginRequiredMixin, View):
         user = request.user
         logout(request)
         user.delete()
-        messages.success(request, "Your have succefully deleted Your account")
+        messages.success(request, "Your have successfully deleted Your account")
         return redirect(reverse("index"))
     
 

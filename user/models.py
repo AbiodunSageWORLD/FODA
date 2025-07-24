@@ -67,6 +67,8 @@ class User(AbstractBaseUser, PermissionsMixin):
     verification_code = models.CharField(max_length=6, blank=True, null=True, unique=True)
     verification_code_expires_at = models.DateTimeField(blank=True, null=True)
 
+    old_cart = models.JSONField(null=True, blank=True)
+    
     # Add related_name to avoid clashes
     groups = models.ManyToManyField(
         'auth.Group',
@@ -89,6 +91,15 @@ class User(AbstractBaseUser, PermissionsMixin):
     REQUIRED_FIELDS = ["first_name", "last_name"]
 
     objects = CustomUserManager()
+# Define User Types
+    USER_TYPE_CHOICES = (
+        ("customer", "Customer"),
+        ("vendor", "Vendor"),
+    )
+
+    
+
+    user_type = models.CharField(max_length=10, choices=USER_TYPE_CHOICES, default="customer")
 
     def __str__(self):
         return self.email
@@ -140,6 +151,8 @@ class User(AbstractBaseUser, PermissionsMixin):
         self.verification_code = None # Clear the code after activation
         self.verification_code_expires_at = None # Clear expiration time
         self.save()
+    
+    
 
 class Address(models.Model):
     user = models.ForeignKey(User, related_name="address", on_delete=models.CASCADE)
@@ -152,6 +165,8 @@ class Address(models.Model):
     state = models.CharField(max_length=50)
     country = models.CharField( max_length=50)
 
+    def __str__(self):
+        return f"{self.last_name} {self.first_name} Address"
     
     class Meta:
         verbose_name = "Address"
