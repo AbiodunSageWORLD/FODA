@@ -3,85 +3,95 @@
 {% block title %}My Orders{% endblock title %}
 
 {% block content %}
-<section class="w-11/12 bg-white rounded-lg shadow/90 p-[1rem] mb-[2rem] mt-8 max-w-7xl mx-auto">
-    <h1 class="mb-[1rem] flex items-center">
-        <svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 101.57 122.88" width=64 height=64 class="stroke-[#CC5500] fill-[#CC5500] stroke-[0.5px]">
-            <title>my-orders</title>
-            <path d="M4.7,28.93H26.13V24.56a24.57,24.57,0,0,1,49.13,0v4.37h21.6a4.7,4.7,0,0,1,3.33,1.38,4.76,
-            4.76,0,0,1,1.38,3.32V106a16.93,16.93,0,0,1-16.88,16.88H16.88A16.93,16.93,0,0,1,0,106V33.63a4.71,4.71,
-            0,0,1,4.7-4.7ZM20.37,63.87h9.41A1.24,1.24,0,0,1,31,65.1v9.41a1.23,1.23,0,0,1-1.23,1.23H20.37a1.23,1.23
-            ,0,0,1-1.23-1.23V65.1a1.24,1.24,0,0,1,1.23-1.23Zm24,9.68c-1.74,0-3.14-1.67-3.14-3.74s1.4-3.75,
-            3.14-3.75h37c1.74,0,3.15,1.68,3.15,3.75a3.48,3.48,0,0,1-3.15,3.74ZM18.67,97.2a2,2,0,0,1,.39-2.93,2.32,
-            2.32,0,0,1,3.13-.1l2.19,2.25,5.48-5.61a2,2,0,0,1,2.94.31A2.33,2.33,0,0,1,33,94.25l-7.26,7.45a2,2,0,0,
-            1-2.94-.31l-.17-.2a2.16,2.16,0,0,1-.33-.27L18.67,97.2ZM44.11,100C42.38,100,41,98.32,41,96.26s1.41-3.75,
-            3.14-3.75h37c1.73,0,3.14,1.68,3.14,3.75S82.87,100,81.14,100Zm-12-71.07H69.27V24.56a18.58,18.58,0,0,0-37.15,
-            0v4.37Zm-6,11.61V34.91H6V106a10.93,10.93,0,0,0,10.89,10.89H84.69A11,11,0,0,0,95.58,106V34.91H75.26V40.6a6.84,
-            6.84,0,1,1-6-.1V34.91H32.12v5.65a6.84,6.84,0,1,1-6,0Z"/></svg>
-        <span>Order History</span>
-    </h1>
-    
-    {% if user.order.all %}
+<section class="w-11/12 bg-white rounded-2xl shadow-md px-6 py-8 mb-12 mt-10 max-w-7xl mx-auto">
+  <h1 class="mb-6 flex items-center gap-4 text-2xl font-semibold text-burntOrange-700">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 101.57 122.88" width="32" height="32" class="fill-current text-burntOrange-700">
+      <title>my-orders</title>
+      <path d="M4.7,28.93H26.13V24.56a24.57,24.57,0,0,1,49.13,0v4.37h21.6a4.7,4.7,0,0,1,3.33,1.38,4.76,4.76,0,0,1,1.38,
+      3.32V106a16.93,16.93,0,0,1-16.88,16.88H16.88A16.93,16.93,0,0,1,0,106V33.63a4.71,4.71,0,0,1,4.7-4.7ZM20.37,63.87h9.41A1.24,
+      1.24,0,0,1,31,65.1v9.41a1.23,1.23,0,0,1-1.23,1.23H20.37a1.23,1.23,0,0,1-1.23-1.23V65.1a1.24,1.24,0,0,1,1.23-1.23Zm24,9.68c-1.74,
+      0-3.14-1.67-3.14-3.74s1.4-3.75,3.14-3.75h37c1.74,0,3.15,1.68,3.15,3.75a3.48,3.48,0,0,1-3.15,3.74ZM18.67,97.2a2,2,0,0,1,.39-2.93,
+      2.32,2.32,0,0,1,3.13-.1l2.19,2.25,5.48-5.61a2,2,0,0,1,2.94.31A2.33,2.33,0,0,1,33,94.25l-7.26,7.45a2,2,0,0,1-2.94-.31l-.17-.2a2.16,
+      2.16,0,0,1-.33-.27L18.67,97.2ZM44.11,100C42.38,100,41,98.32,41,96.26s1.41-3.75,3.14-3.75h37c1.73,0,3.14,1.68,3.14,3.75S82.87,
+      100,81.14,100Zm-12-71.07H69.27V24.56a18.58,18.58,0,0,0-37.15,0v4.37Zm-6,11.61V34.91H6V106a10.93,10.93,0,0,0,10.89,10.89H84.69A11,
+      11,0,0,0,95.58,106V34.91H75.26V40.6a6.84,6.84,0,1,1-6-.1V34.91H32.12v5.65a6.84,6.84,0,1,1-6,0Z"/>
+    </svg>
+    Order History
+  </h1>
+
+  {% if user.order.all %}
+  <div class="overflow-x-auto">
     <table class="order-table">
-        <thead>
-            <tr class="">
-                <th class="pb-[0.5rem] font-medium">Name</th>
-                <th class="pb-[0.5rem] font-medium">Price</th>
-                <th class="pb-[0.5rem] font-medium">Date</th>
-                <th class="pb-[0.5rem] font-medium">Quantity</th>
-                <th class="pb-[0.5rem] font-medium">Status</th>
-                <th></th>
-            </tr>
-        </thead>
+      <thead>
+        <tr>
+          <th>Order #</th>
+          <th>Price</th>
+          <th>Date</th>
+          <th>Quantity</th>
+          <th>Status</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-gray-100">
+        {% for order in user.order.all %}
+        <tr class="hover:bg-gray-50 transition">
+          <td class="font-medium t-row" data-label="Order #:">#{{order.id}}</td>
+          <td class="text-burntOrange-700 t-row" data-label="Price:">₦{{order.get_total_price}}</td>
+          <td class="t-row" data-label="Date:">{{order.order_date}}</td>
+          <td class="t-row" data-label="Quantity:">{{order.get_total_quantity}}</td>
+          <td class="t-row" data-label="Status:">
+            <span class="px-3 py-1 rounded-full text-white text-xs {% if order.get_status_display == 'Pending' %}bg-burntOrange-700{% elif order.get_status_display == 'Confirmed' %}bg-green-600{% elif order.get_status_display == 'Canceled' %}bg-red-500{% else %}bg-gray-500{% endif %}">
+              {{ order.get_status_display }}
+            </span>
+          <td><a href="#" class="text-blue-600 hover:underline">
+                <svg class="fill-burntOrange-700 hover:fill-burntOrange-600 active:fill-burntOrange-800" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" class="inline-block align-middle">
+                  <path d="M12 4.5C7 4.5 2.73 8.11 1 12c1.73 3.89 6 7.5 11 7.5s9.27-3.61 11-7.5c-1.73-3.89-6-7.5-11-7.5zm0 
+                        13c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8a3 3 0 100 6 3 3 0 000-6z"/>
+                </svg>
+              </a>
+            </td>
+        </tr>
+        {% endfor %}
 
-        <tbody>
-            {% for order in user.order.all %}
-            <tr>
-                <td class="flex items-center ">
-                    <img src="{{order.food.image.url}}" alt="{{order.food.name}}" class="mr-4 size-[5rem] object-cover">
-                    <h3>{{order.food.name}}</h3>
-                </td>
-                <td class="text-[#CC5500] t-row" data-label="Price:">₦{{order.total_price}}</td>
-                <td data-label="Date: " class="t-row">{{order.order_date}}</td>
-                <td data-label="Quantity: " class="t-row">{{order.quantity}}</td>
-                <td data-label="Status: " class="t-row"><p class="p-[0.5rem_1rem] bg-burntOrange-600 rounded-lg inline-block">pending</p></td>
-                <td><a href="">view detail</a></td>
-            </tr>
-            {% endfor %}
+        <tr>
+          <td class="flex items-center">
+            <span>#2344</span>
+          </td>
+          <td class="text-burntOrange-700">₦2000</td>
+          <td>23-24-53</td>
+          <td>2344</td>
+          <td><span class="px-3 py-1 rounded-full text-white text-xs bg-green-600">Confirmed</span></td>
+          <td><a href="#" class="text-blue-600 hover:underline"><svg xmlns="http://www.w3.org/2000/svg" fill="#CC5500" viewBox="0 0 24 24" width="24" height="24" class="inline-block align-middle">
+                <path d="M12 4.5C7 4.5 2.73 8.11 1 12c1.73 3.89 6 7.5 11 7.5s9.27-3.61 11-7.5c-1.73-3.89-6-7.5-11-7.5zm0 13c-2.76 0-5-2.24-5-5s2.24-5 
+                        5-5 5 2.24 5 5-2.24 5-5 5zm0-8a3 3 0 100 6 3 3 0 000-6z"/>
+                </svg>
+                View detail</a></td>
+        </tr>
 
-            <tr>
-                <td class="flex items-center ">
-                    <img src="https://i.pinimg.com/736x/10/38/a7/1038a702899f4ea379153c2d44e8224e.jpg" alt="food image" class="mr-4 size-[5rem] object-cover">
-                    <h3>Jollof</h3>
-                </td>
-                <td class="text-[#CC5500] t-row" data-label="Price:">#2000</td>
-                <td data-label="Date: " class="t-row">23-24-53</td>
-                <td data-label="Order ID: " class="t-row">2344</td>
-                <td data-label="Status: " class="t-row"><p class="p-[0.5rem_1rem] bg-green-600 rounded-lg inline-block">Confirm</p></td>
-                <td><a href="">view detail</a></td>
-            </tr>
-
-            <tr>
-                <td class="flex items-center ">
-                    <img src="https://i.pinimg.com/736x/10/38/a7/1038a702899f4ea379153c2d44e8224e.jpg" alt="food image" class="mr-4 size-[5rem] object-cover">
-                    <h3>Jollof</h3>
-                </td>
-                <td class="text-[#CC5500] t-row" data-label="Price:">#2000</td>
-                <td data-label="Date: " class="t-row">23-24-53</td>
-                <td data-label="Order ID: " class="t-row">2344</td>
-                <td data-label="Status: " class="t-row"><p class="p-[0.5rem_1rem] bg-red-400 rounded-lg inline-block">canceled</p></td>
-                <td><a href="">view detail</a></td>
-            </tr>
-        </tbody>
+        <tr>
+          <td class="flex items-center">
+            <span>#2344</span>
+          </td>
+          <td class="text-burntOrange-700">₦2000</td>
+          <td>23-24-53</td>
+          <td>2344</td>
+          <td><span class="px-3 py-1 rounded-full text-white text-xs bg-red-500">Canceled</span></td>
+          <td><a href="#" class="text-blue-600 hover:underline"><svg xmlns="http://www.w3.org/2000/svg" fill="#CC5500" viewBox="0 0 24 24" width="24" height="24" class="inline-block align-middle">
+                <path d="M12 4.5C7 4.5 2.73 8.11 1 12c1.73 3.89 6 7.5 11 7.5s9.27-3.61 11-7.5c-1.73-3.89-6-7.5-11-7.5zm0 13c-2.76 0-5-2.24-5-5s2.24-5 
+                        5-5 5 2.24 5 5-2.24 5-5 5zm0-8a3 3 0 100 6 3 3 0 000-6z"/>
+                </svg>
+                View detail</a></td>
+        </tr>
+      </tbody>
     </table>
-    {% else %}
-    <div class="m-[1rem_auto] text-center text-burntOrange-700 border border-solid border-burntOrange-700">
-        <h3> You have no order history</h3>
-        <p>Start shopping now</p>
-        <div class="py-4">
-                <a class="btn-primary p-[0.5rem_1rem] rounded" href="{% url "index" %}">Shop Now</a>
-        </div>
-    </div>
-    {% endif %}
+  </div>
+  {% else %}
+  <div class="mt-6 p-6 text-center text-burntOrange-700 border border-dashed border-burntOrange-700 rounded-lg">
+    <h3 class="text-xl font-semibold">You have no order history</h3>
+    <p class="mb-4">Start shopping now</p>
+    <a class="btn-primary inline-block px-6 py-2 rounded-full" href="{% url 'index' %}">Shop Now</a>
+  </div>
+  {% endif %}
 </section>
 
 {% endblock content %}

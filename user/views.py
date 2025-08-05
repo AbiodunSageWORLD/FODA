@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
 from django.views import View
 from django.views.generic import ListView
@@ -135,7 +135,7 @@ class EditAddressView(LoginRequiredMixin, View):
 
 class DeleteAddressView(LoginRequiredMixin, View):
     def get(self, request, pk):
-        model = Address.objects.get(pk=pk)
+        model = get_object_or_404(Address, pk=pk, user=request.user)
         model.delete()
 
         messages.success(request, "Your address has been deleted")

@@ -134,7 +134,7 @@ class EmailAuthenticationView(View):
 
             messages.success(request, "Your account has been successfully activated! You are now logged in.")
 
-            login(request, user)
+            login(request, user, backend="django.contrib.auth.backends.ModelBackend")
 
             return redirect(reverse("dashboard")) 
 
@@ -150,7 +150,7 @@ class RefreshCodeEmailAuthenticationView(View):
         try:
             validate_email = EmailValidator()
 
-            if validate_email(email):
+            if validate_email(email)==None:
                 user = get_object_or_404(User, email=email)
 
                 if user:

@@ -1,0 +1,181 @@
+{% extends "base.html" %}
+
+{% block title %}Open hours{% endblock title %}
+
+{% block content %}
+<section class="max-w-150 px-6 mt-4 mx-auto">
+    <header class="flex items-center gap-2 mb-8">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="46" height="46" fill="#CC5500">
+            <path d="M19 4h-1V2.75a.75.75 0 0 0-1.5 0V4H7V2.75a.75.75 0 0 0-1.5 0V4H5a3 3 0 0 0-3 3v12a3 3 
+            0 0 0 3 3h14a3 3 0 0 0 3-3V7a3 3 0 0 0-3-3ZM3.5 7a1.5 1.5 0 0 1 1.5-1.5h1v.75a.75.75 0 0 0 1.5 
+            0V5.5h10v.75a.75.75 0 0 0 1.5 0V5.5h1A1.5 1.5 0 0 1 20.5 7v2h-17V7Zm0 3.5h17v8.5a1.5 1.5 0 0 
+            1-1.5 1.5H5a1.5 1.5 0 0 1-1.5-1.5v-8.5Zm10 2.75a.75.75 0 0 0-1.5 0v2.5c0 .2.08.39.22.53l1.5 
+            1.5a.75.75 0 1 0 1.06-1.06l-1.28-1.28v-2.19Z"/>
+        </svg>
+
+         <div>
+            <h1 class=" text-2xl font-semibold">Business hours</h1>
+            <p class="text-sm text-gray-400 w-66">Configure your standard operating hours for your business</p>
+         </div>
+    </header>
+
+    <main>
+        <form action="" method="post">
+            {% csrf_token %}
+            {{ formset.management_form }}
+
+            {% for form in formset %}
+            <div class="form-item flex items-center gap-4 justify-between max-w-150 px-6 mx-auto text-sm mb-4">
+                <div class="flex gap-2 items-center">
+                    <div class="toggle-switch">
+                        <input checked id="switch-component" type="checkbox" class="peer" />
+                        {{ form.is_open }}
+                        <label for="{{ form.is_open.id_for_label }}" class="">
+                        </label>
+                    </div>
+
+                    <label for="{{ form.is_open.id_for_label }}">
+                        {{ form.is_open.label }}
+                    </label>
+                </div>
+                
+                <div class="time-fields flex gap-4 items-center">
+                    {{ form.open_time }}
+
+                    <h3>To</h3>
+
+                    {{ form.close_time }}
+                </div>
+
+                <div class="closed hidden">
+                    <div class="flex gap-2 w-66 bg-gray-200 items-center px-2 py-1 rounded">
+                        <svg class="size-6" xmlns="http://www.w3.org/2000/svg" fill="#CC5500" viewBox="0 0 24 24">
+                            <path d="M14.5 6A6 6 0 1 0 18 14.5 4.5 4.5 0 0 1 14.5 6Z"/>
+                    </svg>
+                        <h1 class="font-semibold text-gray-500">Closed</h1>
+                    </div>
+                </div>
+            
+            </div>
+            {% endfor %}
+
+            <div class="form-item flex items-center gap-4 justify-between max-w-150 px-6 mx-auto text-sm mb-4">
+                
+
+                <div class="flex gap-2 items-center">
+                    <div class="toggle-switch">
+                        <input checked id="switch-component" type="checkbox" class="" />
+                        <label for="switch-component" >
+                        </label>
+                    </div>
+
+                    <label for="test" class="font-semibold">Monday</label>
+                </div>
+
+                
+                <div class="time-fields flex gap-4 items-center">
+                    <input type="time" name="" id="" class="ring-2 ring-solid ring-gray-400 rounded px-2 py-1 focus:outline-none focus:border-none focus-within:ring-2 focus-within:ring-burntOrange-700">
+
+                    <h3>To</h3>
+
+                    <input type="time" name="" id="" class="ring-2 ring-solid ring-gray-400 rounded px-2 py-1 focus:outline-none focus:border-none focus-within:ring-2 focus-within:ring-burntOrange-700">
+                </div>
+
+                <div class="closed hidden">
+                    <div class="flex gap-2 w-66 bg-gray-200 items-center px-2 py-1 rounded">
+                        <svg class="size-6" xmlns="http://www.w3.org/2000/svg" fill="#CC5500" viewBox="0 0 24 24">
+                            <path d="M14.5 6A6 6 0 1 0 18 14.5 4.5 4.5 0 0 1 14.5 6Z"/>
+                    </svg>
+                        <h1 class="font-semibold text-gray-500">Closed</h1>
+                    </div>
+                </div>
+
+            
+            </div>
+
+            <div class="form-item flex items-center gap-4 justify-between max-w-150 px-6 mx-auto text-sm mb-4">
+                
+
+                <div class="flex gap-2 items-center">
+                    <div class="toggle-switch">
+                        <input checked id="1switch-component" type="checkbox" class="" />
+                        <label for="1switch-component" >
+                        </label>
+                    </div>
+
+                    <label for="test" class="font-semibold">Tuesday</label>
+                </div>
+
+                
+                <div class="time-fields flex gap-4 items-center">
+                    <input type="time" name="" id="" class="ring-2 ring-solid ring-gray-400 rounded px-2 py-1 focus:outline-none focus:border-none focus-within:ring-2 focus-within:ring-burntOrange-700">
+
+                    <h3>To</h3>
+
+                    <input type="time" name="" id="" class="ring-2 ring-solid ring-gray-400 rounded px-2 py-1 focus:outline-none focus:border-none focus-within:ring-2 focus-within:ring-burntOrange-700">
+                </div>
+
+                <div class="closed hidden">
+                    <div class="flex gap-2 w-66 bg-gray-200 items-center px-2 py-1 rounded">
+                        <svg class="size-6" xmlns="http://www.w3.org/2000/svg" fill="#CC5500" viewBox="0 0 24 24">
+                            <path d="M14.5 6A6 6 0 1 0 18 14.5 4.5 4.5 0 0 1 14.5 6Z"/>
+                    </svg>
+                        <h1 class="font-semibold text-gray-500">Closed</h1>
+                    </div>
+                </div>
+
+            
+            </div>
+
+            <div class="text-sm text-right space-x-4 mt-12">
+                <a class="rounded p-2 border" href="">Back to dashboard</a>
+                <button class="btn-primary rounded p-2" type="submit">Save Schedule</button>
+            </div>
+        </form>
+
+    </main>
+</section>
+{% endblock content %}
+
+{% block scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Select all the checkboxes for the 'is_open' field.
+    // The attribute selector `[id$="-is_open"]` is a robust way to select
+    // all elements where the ID ends with "-is_open"
+    // const openCheckboxes = document.querySelectorAll('input[id$="-is_open"]');
+    const openCheckboxes = document.querySelectorAll('input[id$="switch-component"]');
+
+    function toggleTimeFields(checkbox) {
+        // Find the parent container for this specific form
+        const formContainer = checkbox.closest('.form-item');
+        
+        // Find the time fields and closed message divs within this container
+        const timeFields = formContainer.querySelector('.time-fields');
+        const closedMessage = formContainer.querySelector('.closed');
+
+        if (checkbox.checked) {
+            // If the checkbox is checked, show the time fields and hide the message
+            if (timeFields.classList.contains("hidden")) 
+                timeFields.classList.remove("hidden");
+            closedMessage.classList.add("hidden");
+        } else {
+            // If the checkbox is unchecked, hide the time fields and show the message
+            timeFields.classList.add("hidden");
+            closedMessage.classList.remove("hidden");
+        }
+    }
+
+    // Loop through each checkbox and attach the event listener
+    openCheckboxes.forEach(function(checkbox) {
+        // Run the function once on page load to set the initial state correctly
+        toggleTimeFields(checkbox);
+        
+        // Add a 'change' event listener to each checkbox
+        checkbox.addEventListener('change', function() {
+            toggleTimeFields(this);
+        });
+    });
+});
+</script>
+{% endblock scripts %}
