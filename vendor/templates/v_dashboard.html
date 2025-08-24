@@ -1,0 +1,173 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Vendor Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link
+      href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        background-color: #cc5500;
+      } /* burnt orange */
+    </style>
+  </head>
+  <body class="flex">
+    <!-- Sidebar -->
+    <div class="w-64 bg-gray-900 text-white min-h-screen p-4">
+      <h2 class="text-2xl font-bold mb-6">Vendor Dashboard</h2>
+      <ul>
+        <li>
+          <a href="#foods" class="block py-2 hover:bg-gray-700 rounded"
+            >Foods</a
+          >
+        </li>
+        <li>
+          <a href="#orders" class="block py-2 hover:bg-gray-700 rounded"
+            >Orders</a
+          >
+        </li>
+        <li>
+          <a href="#metrics" class="block py-2 hover:bg-gray-700 rounded"
+            >Sales Metrics</a
+          >
+        </li>
+      </ul>
+    </div>
+
+    <!-- Main content -->
+    <div class="flex-1 p-6 space-y-8 text-gray-800">
+      <!-- Foods Section -->
+      <section id="foods" class="bg-white p-4 rounded-lg shadow-md">
+        <h3 class="text-xl font-bold mb-4">Foods on Sale</h3>
+        <table class="w-full border border-gray-300 mb-4" id="food-table">
+          <thead>
+            <tr class="bg-gray-200">
+              <th class="p-2 border">Name</th>
+              <th class="p-2 border">Price</th>
+              <th class="p-2 border">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for f in foods %}
+            <tr id="food-{{ f.id }}">
+              <td class="p-2 border">{{ f.name }}</td>
+              <td class="p-2 border">{{ f.price }}</td>
+              <td class="p-2 border">
+                <button
+                  class="bg-blue-500 text-white px-2 py-1 rounded edit-food"
+                  data-id="{{ f.id }}"
+                >
+                  Edit
+                </button>
+                <button
+                  class="bg-red-500 text-white px-2 py-1 rounded delete-food"
+                  data-id="{{ f.id }}"
+                >
+                  Delete
+                </button>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+        <button
+          id="add-food-btn"
+          class="bg-green-600 text-white px-4 py-2 rounded"
+        >
+          Add Food
+        </button>
+      </section>
+
+      <!-- Orders Section -->
+      <section id="orders" class="bg-white p-4 rounded-lg shadow-md">
+        <h3 class="text-xl font-bold mb-4">Orders</h3>
+        <table class="w-full border border-gray-300">
+          <thead>
+            <tr class="bg-gray-200">
+              <th class="p-2 border">Customer</th>
+              <th class="p-2 border">Food</th>
+              <th class="p-2 border">Quantity</th>
+              <th class="p-2 border">Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for order in orders %}
+            <tr>
+              <td class="p-2 border">{{ order.order.first_name}}</td>
+              <td class="p-2 border">{{ order.food.name }}</td>
+              <td class="p-2 border">{{ order.quantity }}</td>
+              <td class="p-2 border">{{ order.status }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </section>
+
+      <!-- Metrics Section -->
+      <section id="metrics" class="bg-white p-4 rounded-lg shadow-md">
+        <h3 class="text-xl font-bold mb-4">Sales Metrics</h3>
+        <canvas id="salesChart"></canvas>
+      </section>
+    </div>
+
+    <!-- AJAX Script -->
+    <script>
+      // Render sales chart
+      const ctx = document.getElementById('salesChart').getContext('2d');
+      const salesChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: {{ sales_labels|safe }},
+          datasets: [{
+            label: 'Sales to Date',
+            data: {{ sales_data|safe }},
+            borderColor: 'rgba(255, 99, 132, 1)',
+            backgroundColor: 'rgba(255, 99, 132, 0.2)',
+            fill: true
+          }]
+        }
+      });
+
+      // AJAX Delete
+      $(document).on("click", ".delete-food", function(){
+        const foodId = $(this).data("id");
+        $.ajax({
+          url: "#",
+          method: "POST",
+          data: { id: foodId, csrfmiddlewaretoken: '{{ csrf_token }}' },
+          success: function(){
+            $("#food-" + foodId).remove();
+          }
+        });
+      });
+
+      // Add food (show prompt)
+      $("#add-food-btn").on("click", function(){
+        const name = prompt("Enter food name:");
+        const price = prompt("Enter price:");
+        $.ajax({
+          url: "#",
+          method: "POST",
+          data: { name: name, price: price, csrfmiddlewaretoken: '{{ csrf_token }}' },
+          success: function(response){
+            $("#food-table tbody").append(
+              `<tr id="food-${response.id}">
+                <td class="p-2 border">${response.name}</td>
+                <td class="p-2 border">${response.price}</td>
+                <td class="p-2 border">
+                  <button class="bg-blue-500 text-white px-2 py-1 rounded edit-food" data-id="${response.id}">Edit</button>
+                  <button class="bg-red-500 text-white px-2 py-1 rounded delete-food" data-id="${response.id}">Delete</button>
+                </td>
+              </tr>`
+            );
+          }
+        });
+      });
+    </script>
+  </body>
+</html>

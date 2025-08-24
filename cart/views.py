@@ -132,17 +132,22 @@ def add_checkout_address(request):
         address.user = request.user
         address.save()
 
+        # I am converting the model  to a json serializable by
+        # converting it to a dictionary using the ".values" 
         adrress_model = Address.objects.filter(user=request.user).values(
             "id", "first_name", "last_name",
             "full_name", "phone", "street", "city", "state", "country"
         )
 
         address_list = []
+
+        # Phonenumber field will still be a class so i deconstructed it and passed
+        # it as national format i.e 0813 426 3466, if i were to remove .as_national, 
+        # the output would be  +8134263466. Read more on django phone number field
         for addr in adrress_model:
             addr["phone"] = str(addr["phone"].as_national)  # Make phone JSON-serializable
             address_list.append(addr)
 
-        print(address_list)
 
         return JsonResponse({"success":True, "addresses":list(address_list)})
     
@@ -155,6 +160,8 @@ def  delete_checkout_address(request, id):
 
     address.delete()
 
+    # This could be a function or an includes to prevent trying to convert to 
+    # dictionary
     adrress_model = Address.objects.filter(user=request.user).values(
         "id", "first_name", "last_name",
         "full_name", "phone", "street", "city", "state", "country"

@@ -1,0 +1,254 @@
+{% extends "base.html" %}
+
+{% block title %}vendor - Foods {% endblock title %}
+
+{% block content %}
+<section>
+
+    <div class="fixed top-5 right-5 z-50 space-y-4 transition-opacity opacity-0 duration-1000 hidden" id="food_list_message">
+        <div class="px-4 py-3 rounded-lg shadow-lg border text-sm font-medium">
+        </div>
+    </div>
+
+    <div class="w-[90%] mx-auto flex justify-between items-center my-4">
+        <h1 class="text-2xl font-bold text-gray-800">Food List</h1>
+
+        <a href="" class="px-4 py-1 btn-primary rounded-lg transition">
+            + Add Food
+        </a>
+    </div>
+
+    <p class="w-[90%] mx-auto text-sm text-gray-500 mt-2">Manage your vendor food items and toggle availability as needed.</p>
+
+    {% if foods %}
+    <table class="w-[90%] mx-auto border-spacing-y-4 border-separate  table-auto text-sm text-center text-gray-600">
+        <thead class="bg-gray-300 text-semibold text-black py-4">
+            <tr>
+                <th class="py-2">Food</th>
+                <th class="py-2">Price</th>
+                <th class="py-2">Available</th>
+                <th class="py-2">Action</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            {% for food in foods %}
+            <tr class="border-b border-x border-gray-500 py-4 hover:bg-gray-100 transition">
+                <td class="px-2 mx-auto flex gap-3 items-center">
+                    <img src="{{ food.image.url }}" alt="{{ food.name }}" class="rounded-xl object-cover size-10 shadow">
+                    <h1>{{ food.name }}</h1>
+                </td>
+
+                <td class="px-2">₦{{ food.price }}</td>
+
+                <td class="px-2">
+                    <div class="toggle-switch">
+                        <input {% if food.is_sale %} checked {% endif %} id="{{ food.name }}" type="checkbox" value="{{ food.id }}" class="checkbox" />
+                        <label for="{{ food.name }}" ></label>
+
+                        <span class="absolute inset-0 justify-center items-center z-40 hidden ">
+                            <svg class="w-4 h-4 text-gray-600 animate-spin spinner" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4l3.5-3.5L12 0v4a8 8 0 100 16v4l3.5-3.5L12 20v4a8 8 0 01-8-8z"></path>
+                            </svg>
+                        </span>
+                    </div>
+                </td>
+
+                <td >
+                    <div class="px-2 flex gap-2 justify-center items-center">
+                        <a href="" class="inline-block">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="size-6 fill-burntOrange-700 hover:fill-burntOrange-600 active:fill-burntOrange-800">
+                                <path d="M3 17.25V21h3.75l11-11.03-3.75-3.75L3 17.25zM20.71 7.04a1.004 1.004 0 
+                                000-1.42l-2.34-2.34a1.004 1.004 0 00-1.42 0l-1.83 1.83 3.75 3.75 1.84-1.82z"/>
+                            </svg>
+                        </a>
+
+                        <a href="" class="inline-block">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="size-6 fill-burntOrange-700 hover:fill-burntOrange-600 active:fill-burntOrange-800">
+                                <path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/>
+                            </svg>
+                        </a>
+                    </div>
+                </td>
+
+            </tr>
+            {% endfor %}
+
+            <!-- Dummy data -->
+             <tr class="border-b border-x border-gray-500 py-4 hover:bg-gray-100 transition">
+                <td class="px-2 mx-auto flex gap-3 items-center">
+                    <img src="/media/foods/IMG-20250605-WA0020.jpg" alt="African Salad" class="rounded-xl object-cover size-10">
+                    <h1>African Salad</h1>
+                </td>
+
+                <td class="px-2">₦15000.00</td>
+
+                <td class="px-2">
+                    <div class="toggle-switch">
+                        <input  id="African Salad" type="checkbox" value="1" class="checkbox" />
+                        <label for="African Salad" ></label>
+
+                        <span class="absolute inset-0 flex justify-center items-center z-40">
+                            <svg class="hidden w-4 h-4 text-gray-600 animate-spin spinner" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4l3.5-3.5L12 0v4a8 8 0 100 16v4l3.5-3.5L12 20v4a8 8 0 01-8-8z"></path>
+                            </svg>
+                        </span>
+                    </div>
+                </td>
+
+                <td >
+                    <div class="px-2 flex gap-2 justify-center items-center">
+                        <a href="" class="inline-block">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="#CC5500" viewBox="0 0 24 24" class="size-6">
+                                <path d="M3 17.25V21h3.75l11-11.03-3.75-3.75L3 17.25zM20.71 7.04a1.004 1.004 0 
+                                000-1.42l-2.34-2.34a1.004 1.004 0 00-1.42 0l-1.83 1.83 3.75 3.75 1.84-1.82z"/>
+                            </svg>
+                        </a>
+
+                        <a href="" class="inline-block">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="#CC5500" viewBox="0 0 24 24" class="size-6">
+                                <path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/>
+                            </svg>
+                        </a>
+                    </div>
+                </td>
+
+            </tr>
+            
+            <tr class="border-b border-x border-gray-500 py-4 hover:bg-gray-100 transition">
+                <td class="px-2 mx-auto flex gap-3 items-center">
+                    <img src="/media/foods/IMG-20250605-WA0023.jpg" alt="Nkwobi" class="rounded-xl object-cover size-10">
+                    <h1>Nkwobi</h1>
+                </td>
+
+                <td class="px-2">₦25000.00</td>
+
+                <td class="px-2">
+                    <div class="toggle-switch">
+                        <input  id="Nkwobi" type="checkbox" value="2" class="checkbox" />
+                        <label for="Nkwobi" ></label>
+
+                        <span class="absolute inset-0 flex justify-center items-center z-40">
+                            <svg class="hidden w-4 h-4 text-gray-600 animate-spin spinner" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4l3.5-3.5L12 0v4a8 8 0 100 16v4l3.5-3.5L12 20v4a8 8 0 01-8-8z"></path>
+                            </svg>
+                        </span>
+                    </div>
+                </td>
+
+                <td >
+                    <div class="px-2 flex gap-2 justify-center items-center">
+                        <a href="" class="inline-block">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="#CC5500" viewBox="0 0 24 24" class="size-6">
+                                <path d="M3 17.25V21h3.75l11-11.03-3.75-3.75L3 17.25zM20.71 7.04a1.004 1.004 0 
+                                000-1.42l-2.34-2.34a1.004 1.004 0 00-1.42 0l-1.83 1.83 3.75 3.75 1.84-1.82z"/>
+                            </svg>
+                        </a>
+
+                        <a href="" class="inline-block">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="#CC5500" viewBox="0 0 24 24" class="size-6">
+                                <path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/>
+                            </svg>
+                        </a>
+                    </div>
+                </td>
+
+            </tr>
+            <!-- dummy data ends here -->
+        </tbody>
+    </table>
+    {% else %}
+    <div class="w-[90%] mx-auto">
+        <p class="text-center text-orange-600">No product added  yet.</p>
+    </div>
+    {% endif %}
+</section>
+{% endblock content %}
+
+{% block scripts %}
+<script>
+    function show_and_hide_message() {
+        $("#food_list_message").removeClass("hidden")
+        $("#food_list_message").removeClass("opacity-0").addClass("opacity-100")
+
+        setTimeout(() => {
+            $("#food_list_message").removeClass("opacity-100").addClass("opacity-0")
+
+            setTimeout(() => {
+                $("#food_list_message").addClass("hidden")
+            }, 1000)
+            
+        }, 5000)
+    }
+
+    $(document).ready( function() {
+        // activated if a checkbox is clicked
+        $(".checkbox").change( function() {
+            const $checkbox = $(this);
+            const id = $checkbox.attr("value")
+            const operation = this.checked
+            
+            // Disable checkbox and show spinner
+            $checkbox.prop("disabled", true);
+            $checkbox.siblings("span").removeClass("hidden").addClass("flex");
+
+            
+            $.ajax({
+                url: '',
+                type: "POST",
+                data : {
+                    csrfmiddlewaretoken: "{{ csrf_token }}",
+                    id: id,
+                    method: operation
+                },
+
+                success: function (response) {
+
+                    if (response.success === true) {
+                        $("#food_list_message").html(
+                            `<div class="px-4 py-3 rounded-lg shadow-lg border text-sm font-medium bg-green-100 border-green-300 text-green-800">
+                                ${response.message}
+                             </div>`
+                        )
+                    }
+
+                    else {
+                        $("#food_list_message").html(
+                            `<div class="px-4 py-3 rounded-lg shadow-lg border text-sm font-medium bg-red-100 border-red-300 text-red-800">
+                                ${response.message}
+                             </div>`
+                        )
+                    }
+
+                    show_and_hide_message()
+                    
+                    
+                },
+
+                error: function (xhr, errmsg, err) {
+                    console.log("Error occured will changing food availability:", errmsg);
+                    
+                    $("#food_list_message").html(
+                            `<div class="px-4 py-3 rounded-lg shadow-lg border text-sm font-medium bg-red-100 border-red-300 text-red-800">
+                                Error occured while changing food availability
+                             </div>`
+                        )
+
+                    $checkbox.prop("checked", !operation)
+
+                    show_and_hide_message()
+                },
+
+                complete: function () {
+                    // Re-enable checkbox and hide spinner
+                    $checkbox.prop("disabled", false)
+                    $checkbox.siblings("span").removeClass("flex").addClass("hidden")
+                }
+            })
+        } )
+    })
+</script>
+{% endblock scripts %}

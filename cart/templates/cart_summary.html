@@ -59,6 +59,8 @@
     <h3 class="text-xl font-bold text-gray-800">
         Total: <span class="text-orange-600" id="cart-total">₦{{ total_price }}</span>
     </h3>
+
+    <a href="{% url "checkout" %}" class="bg-orange-500 text-white  font-semibold px-4 py-1 mt-2 rounded hover:bg-orange-600">Go to checkout</a>
 </div>
 
 {% else %}
