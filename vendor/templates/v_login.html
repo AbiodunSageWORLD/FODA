@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Vendor Login</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background: #f9fafb;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+      }
+      .login-container {
+        background: #fff;
+        padding: 2rem;
+        border-radius: 12px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        width: 400px;
+      }
+      .login-container h2 {
+        text-align: center;
+        margin-bottom: 1rem;
+      }
+      .login-container label {
+        display: block;
+        margin-top: 10px;
+        font-weight: bold;
+      }
+      .login-container input {
+        width: 100%;
+        padding: 10px;
+        margin-top: 5px;
+        border-radius: 6px;
+        border: 1px solid #ccc;
+      }
+      .login-container button {
+        margin-top: 15px;
+        width: 100%;
+        padding: 12px;
+        background: #2563eb;
+        border: none;
+        border-radius: 6px;
+        color: white;
+        font-weight: bold;
+        cursor: pointer;
+      }
+      .login-container button:hover {
+        background: #1e40af;
+      }
+      .error {
+        color: red;
+        text-align: center;
+        margin-bottom: 1rem;
+      }
+      .signup-link {
+        text-align: center;
+        margin-top: 10px;
+      }
+      .signup-link a {
+        color: #2563eb;
+        text-decoration: none;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="login-container">
+      <h2>Vendor Login</h2>
+
+      {% if error %}
+      <p class="error">{{ error }}</p>
+      {% endif %}
+
+      <form method="POST">
+        {% csrf_token %}
+
+        <label for="email">Email</label>
+        <input type="text" name="email" required />
+
+        <label for="password">Password</label>
+        <input type="password" name="password" required />
+
+        <button type="submit">Login</button>
+      </form>
+
+      <div class="signup-link">
+        <p>
+          Don't have an account?
+          <a href="{% url 'vendor_signup' %}">Sign up here</a>
+        </p>
+      </div>
+    </div>
+  </body>
+</html>

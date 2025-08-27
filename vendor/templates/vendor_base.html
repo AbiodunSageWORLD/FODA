@@ -1,0 +1,182 @@
+{% load static %}
+{% load static tailwind_tags %}
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <title>{% block title %}{% endblock title %}</title>
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        {% tailwind_css %}
+        <!-- <link
+      href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
+      rel="stylesheet"
+    /> -->
+    </head>
+
+    <body class="block md:flex">
+        <header class="md:hidden flex bg-gray-900 text-white  p-6 items-center justify-between">
+            <h2 class="text-2xl font-bold">Vendor Dashboard</h2>
+
+            <div class="flex items-center gap-1 hover:text-yellow-300 transition z-50" id="vendor-menu">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+                </svg>
+                Menu
+            </div>
+        </header>
+
+        <!-- For the menu sidebar -->
+        <div class="w-64 md:hidden bg-gray-900 text-white h-full p-4 absolute top-0 left-0 hidden z-50  ease-in-out  transition-all duration-500 -translate-x-full opacity-0" 
+            id="vendor-menu-list">
+            <h2 class="text-2xl font-bold mb-6">Vendor Dashboard</h2>
+            <ul >
+                <li>
+                    <a href="{% url "vendor_dashboard" %}" class="block py-2 hover:bg-gray-700 rounded"
+                    >Dashboard</a
+                    >
+                </li>
+                <li>
+                    <a href="{% url "vendor_food_list" %}" class="block py-2 hover:bg-gray-700 rounded"
+                    >Foods</a
+                    >
+                </li>
+                <li>
+                    <a href="{% url "buisness_hours" %}" class="block py-2 hover:bg-gray-700 rounded"
+                    >Business Hours</a
+                    >
+                </li>
+                <li>
+                    <a href="#orders" class="block py-2 hover:bg-gray-700 rounded"
+                    >Orders</a
+                    >
+                </li>
+                <li>
+                    <a href="#metrics" class="block py-2 hover:bg-gray-700 rounded"
+                    >Sales Metrics</a
+                    >
+                </li>
+            </ul>
+
+        </div>
+        <div class="absolute inset-0 hidden z-40" id="menu-overlay"></div>
+        <!-- End of menu sidebar -->
+        
+        <!-- Sidebar -->
+        <div class="w-64 bg-gray-900 text-white min-h-screen p-4 hidden md:block">
+            <h2 class="text-2xl font-bold mb-6">Vendor Dashboard</h2>
+            <ul>
+                <li>
+                    <a href="{% url "vendor_dashboard" %}" class="block py-2 hover:bg-gray-700 rounded"
+                    >Dashboard</a
+                    >
+                </li>
+                <li>
+                    <a href="{% url "vendor_food_list" %}" class="block py-2 hover:bg-gray-700 rounded"
+                    >Foods</a
+                    >
+                </li>
+                <li>
+                    <a href="{% url "buisness_hours" %}" class="block py-2 hover:bg-gray-700 rounded"
+                    >Business Hours</a
+                    >
+                </li>
+                <li>
+                    <a href="#orders" class="block py-2 hover:bg-gray-700 rounded"
+                    >Orders</a
+                    >
+                </li>
+                <li>
+                    <a href="#metrics" class="block py-2 hover:bg-gray-700 rounded"
+                    >Sales Metrics</a
+                    >
+                </li>
+            </ul>
+        </div>
+
+        <!-- for success messages -->
+        {% if messages %}
+        <div class="fixed top-5 right-5 z-50 space-y-4 transition-opacity opacity-100 duration-1000" id="message">
+        {% for message in messages %}
+            <div class="px-4 py-3 rounded-lg shadow-lg border text-sm font-medium
+                {% if message.tags == 'success' %}
+                    bg-green-100 border-green-300 text-green-800
+                {% elif message.tags == 'error' %}
+                    bg-red-100 border-red-300 text-red-800
+                {% elif message.tags == 'warning' %}
+                    bg-yellow-100 border-yellow-300 text-yellow-800
+                {% else %}
+                    bg-gray-100 border-gray-300 text-gray-800
+                {% endif %}">
+                {{ message }}
+            </div>
+        {% endfor %}
+        </div>
+        {% endif %}
+        <!--    -->
+
+        <main class="flex-1 relative ">
+
+            {% block content %}
+            {% endblock content %}
+        </main>
+
+        {% block scripts %}{% endblock scripts %}
+    </body>
+    
+    <!-- Fade out django messages -->
+    <script>
+    const message = document.getElementById("message")
+    const menu = document.getElementById("vendor-menu")
+    const menu_list = document.getElementById("vendor-menu-list")
+    const menu_overlay = document.getElementById("menu-overlay")
+
+    menu.addEventListener("click", function() {
+        if (menu_list.classList.contains("hidden")){
+            menu_list.classList.replace("hidden", "fixed")
+            menu_overlay.classList.remove("hidden")
+            
+            setTimeout(() => {
+                menu_list.classList.remove("-translate-x-full")
+                menu_list.classList.remove("opacity-0")
+            }, 10)
+            
+        }
+        else {
+            
+            menu_list.classList.add( "-translate-x-full")
+            menu_list.classList.add("opacity-0")
+
+            setTimeout(() => {
+                menu_list.classList.replace("fixed", "hidden")
+                menu_overlay.classList.add("hidden")
+            }, 500)
+            
+
+        }
+    })
+
+    menu_overlay.addEventListener("click", function(){
+        menu_list.classList.add( "-translate-x-full")
+        menu_list.classList.add("opacity-0")
+
+        setTimeout(() => {
+            menu_list.classList.replace("fixed", "hidden")
+            menu_overlay.classList.add("hidden")
+        }, 500)
+    })
+
+    if (message){
+      window.addEventListener("load", () => {
+        setTimeout(() => {
+          message.classList.replace("opacity-100", "opacity-0")
+
+          setTimeout(() => {
+            message.classList.add("hidden")
+          }, 1000)
+          
+        }, 5000)
+      })
+    }
+  </script>
+</html>

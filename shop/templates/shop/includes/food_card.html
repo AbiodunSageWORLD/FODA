@@ -1,0 +1,48 @@
+{% load thumbnail %}
+{% load shop_filters %}
+
+{% for food in foods %}
+
+<div class="flex gap-2 justify-between ring ring-gray-100 rounded-xl">
+    <div class="px-4 pb-4 flex flex-col justify-between gap-4">
+        <h1 class="font-semibold">{{ food.name }}</h1>
+
+        <div class="flex gap-2 items-center">
+
+            {% comment %} <!-- For future refernce, the code checks if the id of the food is in the 
+             cart, here we use the cart context processor to get the dictionary of items in cart,
+             the filter |stringformat:"d" converts the food.id to string because id in cart is string
+             while id in the food model is an integer --> {% endcomment %}
+            {% with id=food.id|stringformat:"d"  %}
+            {% if id in cart.get_quantities %}
+            <button class="bg-burntOrange-600 text-white px-2 py-1 rounded-full cursor-pointer hover:bg-burntOrange-600 active:bg-burntOrange-800 reduce-qty" 
+            data-food-id="{{ id }}">
+                &minus;
+            </button>
+
+            {% comment %} <!--  The get_item filter is a custom used to get a value in adictionary --> {% endcomment %}
+            <h1 class="bg-gray-300 w-8 px-2 py-1 text-center display-qty">{{ cart.get_quantities|get_item:id|get_item:"quantity" }}</h1>
+            {% endif %}
+            
+
+            <button class="bg-burntOrange-600 text-white px-2 py-1 rounded-full cursor-pointer hover:bg-burntOrange-600 active:bg-burntOrange-800 add-qty"
+             data-food-id="{{ id }}">
+                &plus;
+            </button>
+            {% endwith %}
+        </div>
+
+        <h4 class="text-green-800">₦{{ food.price }}</h4>
+    </div>
+
+    <!-- for future set image height h-28 -->
+    <div class="w-1/3">
+        <img src="{{ food.image.url }}" alt="{{ food.name }}" class=" h-full object-cover rounded-r-xl">
+    </div>
+</div>
+
+{% empty %}
+<div class="text-center py-10 text-burntOrange-600 border border-burntOrange-500 rounded-lg mt-4">
+    <h3 class="text-lg font-semibold">No Food is avalabile at the moment</h3>
+</div>
+{% endfor %}

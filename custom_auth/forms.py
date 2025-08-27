@@ -7,7 +7,7 @@ from user.models import User
 class SignUpForm(UserCreationForm):
     class Meta:
         model = User
-        fields = ["email", "DOB", "first_name", "last_name", "password1", "password2"]
+        fields = ["email", "DOB", "first_name", "last_name", "phone", "password1", "password2"]
         widgets = {
                    "DOB":forms.DateInput({"type":"date"})
                 }

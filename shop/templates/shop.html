@@ -11,9 +11,25 @@
   {{ message }}
 </div>
 {% endif %} -->
+<div class="p-8 space-y-2 mb-4">
+    <h1 class="font-semibold">Explore food</h1> 
+    <div class="flex gap-4 ">
+        <div>
+            <a href="{% url "vendors_list" %}" class="p-4 rounded-lg bg-green-200 text-center font-semibold inline-block">
+              <img src={% static "shop/shop-store-icon.svg" %} alt="vendors" class="size-12">
+              <p>Vendor</p>
+            </a>
+        </div>
+        <div><a href="{% url "shop" %}" class="p-4 rounded-xl bg-blue-100 text-center font-semibold inline-block">
+            <img src="{% static "shop/food-icon.svg" %}" alt="food-icon" class="size-12">
+            <p>Food</p>
+        </a></div>
+    </div>
+</div>
 
+<div class="bg-white pb-16">
+  <h1 class="px-8  mb-4 font-semibold">All Foods</h1>
 
-<div class="bg-white py-16">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
       {% for item in food_items %}

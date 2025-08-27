@@ -44,6 +44,9 @@ class Cart():
 
 
     #Deal with logged in users
+
+    def in_cart(self, food_id):
+        return food_id in self.cart
        
     def add(self, food, quantity):
         food_id = str(food.id)
@@ -106,6 +109,10 @@ class Cart():
                 'price': str(food.price),
                 'quantity': food_qty
             }  # ✅ Update quantity only
+
+            if self.cart[food_id]["quantity"] == 0:
+                self.delete(food_id)
+
             self.session.modified = True
 
             if self.request.user.is_authenticated:

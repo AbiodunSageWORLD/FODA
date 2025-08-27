@@ -41,7 +41,7 @@
 
             <h2 class="text-2xl text-center my-4 font-semibold">New Address</h1>
 
-            <form action="" method="post" class="w-full form-control" id="add_address">
+            <form action="" method="post" class="w-full form-control relative" id="add_address">
                 {% csrf_token %}
 
                 <div class="text-red-800  bg-red-100 border-red-300 w-96  mb-[1rem]" id="form-errors">
@@ -59,11 +59,18 @@
                 </div>
 
                 <button type="submit" class="btn-primary px-4 py-2">Add Address</button>
+
+                <span class="absolute inset-0 justify-center items-center z-40 hidden bg-white/60" id="spinner">
+                    <svg class=" absolute w-4 h-4 text-gray-600 animate-spin spinner top-1/2 left-1/2 translate-[-50%] transform" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4l3.5-3.5L12 0v4a8 8 0 100 16v4l3.5-3.5L12 20v4a8 8 0 01-8-8z"></path>
+                    </svg>
+                </span>
             </form>
         </div>
 
         <div >
-            <div class="bg-orange-200 border-b-4 border-orange-900 p-4">
+            <div class="bg-orange-200 border-b-4 border-orange-900 p-4 md:min-w-90">
                 <h1 class="text-xl font-semibold text-burntOrange-600">Your order</h1>
 
                 <ul class="list-disc list-inside">
@@ -100,7 +107,7 @@
         for (const address of response.addresses ) {
             hold += `
             <li class="flex gap-4 my-4 p-4 shadow max-md:px-8 hover:cursor-pointer hover:ring-burntOrange-500 hover:ring-2 rounded-xl max-md:inline-flex max-md:text-left">
-                <input type="radio" name="address_id" value="{{address.id}} " required >
+                <input type="radio" name="address_id" value="${address.id} " required >
 
                 <div class="w-[200px]">
                     <h1 class="font-bold">${address.full_name}</h1>
@@ -124,6 +131,7 @@
         $("#add_address").submit(function (e) {
             e.preventDefault();
             $("#form-errors").empty()
+            $("#spinner").removeClass("hidden")
             const form_data = new FormData(this)
 
             $.ajax({
@@ -133,7 +141,7 @@
                 processData: false,
                 contentType: false,
                 success: function (response) {
-                
+                    
                     if (response.success === true) {
                         // reset form
                         $("#add_address")[0].reset()
@@ -154,6 +162,9 @@
                 error: function (err) {
                     console.error(err);
                 },
+                complete: function(){
+                    $("#spinner").addClass("hidden")
+                }
             });
         })
         

@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+{% load static %}
+{% load thumbnail %}
+
+{% block title %}Vendors{% endblock title %}
+
+{% block content %}
+<section class="p-4">
+    <div class="mb-4 space-y-2">
+        <h1 class="font-semibold">Explore food</h1> 
+        <div class="flex gap-4 ">
+            <div class="p-4 rounded-lg bg-green-200 text-center font-semibold">
+                <img src={% static "shop/shop-store-icon.svg" %} alt="vendors" class="size-12">
+                <p>Vendor</p>
+            </div>
+            <div><a href="{% url "shop" %}" class="p-4 rounded-xl bg-blue-100 text-center font-semibold inline-block">
+                <img src="{% static "shop/food-icon.svg" %}" alt="food-icon" class="size-12">
+                <p>Food</p>
+            </a></div>
+        </div>
+    </div>
+
+    <main class="bg-white">
+        <h1 class="mb-4 font-semibold">All Vendors</h1>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mx-auto">
+            {% for vendor in vendors %}
+            <a 
+            {% comment %} Uncomment below if you do not want users to visit vendors food list when vendor is closed {% endcomment %}
+            {% comment %} {% if vendor.is_open %} href="{% url "vendor_foods_list" vendor.slug %}" {% endif %}  {% endcomment %}
+            href="{% url "vendor_foods_list" vendor.slug %}"
+            class="rounded-xl transition-transform duration-200 hover:-translate-y-1 hover:shadow-lg/50">
+                <div class="relative w-full h-48 rounded-xl">
+                    {% thumbnail vendor.image "400x300"  as im %}
+                    <img src="{{ im.url }}" alt="{{ vendor.name }}" class="object-cover size-full rounded-xl">
+                    {% endthumbnail %}
+                    <div class="absolute top-2 left-2 bg-burntOrange-500 size-6 rounded-full text-center shadow hover:scale-110 transition">&hearts;</div>
+                    <div class="{% if vendor.is_open %} hidden {% endif %} rounded-xl absolute bg-gradient-to-b from-black/20 to-black/70 inset-0">
+                        <span class="text-white flex justify-center w-full px-4 text-center absolute top-1/2 left-1/2 translate -translate-x-1/2 -translate-y-1/2 text-2xl">{{ vendor.next_open }}</span>
+                    </div>
+                </div>
+
+                <div class="space-y-2 px-2">
+                    <h1 class="text-xl font-semibold">{{ vendor.name }}</h1>
+                    <h2 class="text-sm text-gray-600">{{ vendor.description }}</h2>
+                    <h4 class="text-sm text-gray-600">4.5 <span class="text-yellow-500">&starf;</span></h4>
+                </div>
+            </a>
+            {% endfor %}
+
+            
+        </div>
+
+        <div class="pagination flex gap-2 justify-center mt-4 text-sm items-center">
+            <span class="step-links flex gap-2 items-center">
+                {% if vendors.has_previous %}
+                    <a href="?page=1" class="py-1 px-3 rounded text-white bg-burntOrange-700">&laquo; First</a>
+                    <!-- <a href="?page={{ vendors.previous_page_number }}" class="py-1 px-3 rounded text-white bg-burntOrange-700">Previous</a> -->
+                {% endif %}
+
+                {% for page in vendors.paginator.page_range %}
+                    {% if vendors.number == page %}
+                    <span class="py-1 px-3 rounded text-white bg-burntOrange-700">{{page}}</span>
+            
+                    {% else %}
+
+                    <a href="?page={{ page }}" class="py-1 px-3 rounded text-white bg-burntOrange-700">{{ page }}</a>
+                    {% endif %}
+                {% endfor %}
+
+                {% if vendors.has_next %}
+                    <!-- <a href="?page={{ vendors.next_page_number }}" class="py-1 px-3 rounded text-white bg-burntOrange-700">Next</a> -->
+                    <a href="?page={{ vendors.paginator.num_pages }}" class="py-1 px-3 rounded text-white bg-burntOrange-700">Last &raquo;</a>
+                {% endif %}
+            </span>
+        </div>
+    </main>
+</section>
+{% endblock content %}

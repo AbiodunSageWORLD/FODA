@@ -1,0 +1,103 @@
+{% extends "base.html" %}
+
+{% block title %}FODA | {{ vendor.name }} {% endblock title %}
+
+{% block content %}
+<section>
+    <header class="relative">
+        <img src="{{ vendor.image.url }}" alt="{{ vendor.name }}" class="w-full h-40  object-cover">
+
+        <div class="relative -translate-y-15 w-7/8 mx-auto rounded-t-xl bg-burntOrange-700/25 backdrop-blur p-4 text-white space-y-2">
+            <h1 class="text-4xl text-white font-semibold">{{ vendor.name }}</h1>
+            <div>
+                <h2 class="">{{ vendor.location }}</h2>
+                <h3>4.5 &star; (out of numb)</h3>
+            </div>
+
+            <div class="w-27 ml-auto">
+                <div class="px-6 py-2 bg-burntOrange-600 text-center inline-block rounded-xl">Leave a review</div>
+            </div>
+        </div>
+    </header>
+
+     <div class="w-7/8 shadow-lg p-4 my-4 mx-auto rounded-xl">
+        <h1 class="font-semibold">Opening Time, <span class="text-green-800">{{ week_day.get_day_display }}</span></h1>
+        <p class="text-sm text-gray-600">{{ week_day.open_time|time:'g:i A' }} - {{ week_day.close_time|time:'g:i A' }}</p>
+    </div>
+
+    <main class="w-7/8 shadow-lg p-4 my-4 mx-auto rounded-xl">
+       <h1 class="mb-4 font-semibold">Menu List</h1>
+
+       <div class="grid gap-6 grid-cols-1 sm:grid-cols-2 food-grid">
+            {% include "shop/includes/food_card.html" with foods=foods %}
+
+       </div>
+    </main>
+</section>
+{% endblock content %}
+
+{% block scripts %}
+<script>
+    function send_request(qty, id) {
+        $.ajax({
+                url: "",
+                type: "POST",
+                data: {
+                    "quantity" : qty,
+                    "food_id" : id,
+                },
+
+                success: function(response) {
+                    $(".food-grid").html(response.html)
+                    $("#cart-number").text(response.cart_quantity)
+                },
+
+                error: function(error) {
+                    console.log(error)
+                },
+
+                complete: function(){
+                    // clicking continues after cart has been updated
+                    $(".add-qty").prop("disabled", false)
+                    $(".reduce-qty").prop("disabled", false)
+                }
+            })
+    }
+
+    $(document).ready( function() {
+        $(".reduce-qty").text
+        $(document).on("click", ".reduce-qty", function(){
+            // prevents additional clicks when a updating the cart
+            $(".add-qty").prop("disabled", true)
+            $(".reduce-qty").prop("disabled", true)
+
+            const id = $(this).data("foodId")
+            const current_qty = $(this).next(".display-qty").html()
+            
+            const qty = parseInt(current_qty) - 1
+
+            send_request(qty, id)            
+        })
+
+        $(document).on("click", ".add-qty", function(){
+            // prevents additional clicks when a updating the cart
+            $(".add-qty").prop("disabled", true)
+            $(".reduce-qty").prop("disabled", true)
+
+            const id = $(this).data("foodId")
+            const current_qty = $(this).prev(".display-qty").html()
+            
+
+            if (current_qty) {
+                const qty = parseInt(current_qty) + 1
+                send_request(qty, id)
+            }
+            else {
+                const qty = 1
+                send_request(qty, id)
+            }
+            
+        })
+    })
+</script>
+{% endblock scripts %}

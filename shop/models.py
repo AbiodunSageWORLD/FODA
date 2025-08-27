@@ -72,7 +72,7 @@ class Order(models.Model):
         return f"{self.first_name} {self.last_name}"
 
     def get_total_price(self):
-        return sum(item.get_item_total for item in self.order_item.all())
+        return sum(item.get_item_total() for item in self.order_item.all())
     
     def get_total_quantity(self):
         return sum(item.quantity for item in self.order_item.all())

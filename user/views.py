@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
 from django.views import View
 from django.views.generic import ListView
@@ -9,18 +9,20 @@ from django.contrib.auth import logout
 
 from .forms import EditUserForm, Addressform
 from .models import Address
+from shop.models import Order
 
 # Create your views here.
 # you won a soul and stole a heart,evangelism is powerful
 class DashboardView(LoginRequiredMixin, View):
     def get(self, request):
-        orders = request.user.order.all()
-        addresses = request.user.address.all()
+        orders = request.user.order.all()[:5]
+        addresses = request.user.address.all()[:5]
 
         context = {
             "orders":orders,
             "addresses": addresses
         }
+        
         return render(request, "user/dashboard.html", context=context)
     
 
@@ -67,9 +69,16 @@ class DeleteUserProfileView(LoginRequiredMixin, View):
 
 
 
-class AddressView(LoginRequiredMixin, View):
-    def get(self, request):
-        return render(request, "user/address_list.html")
+class AddressView(LoginRequiredMixin, ListView):
+    model = Address
+    template_name = "user/address_list.html"
+    paginate_by = 5
+    context_object_name = "addresses"
+    ordering = "-id"
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        return queryset.filter(user=self.request.user)
 
 
 class AddAddressView(LoginRequiredMixin, View):
@@ -106,7 +115,7 @@ class AddAddressView(LoginRequiredMixin, View):
 #  by typing the link on the search bar directly
 class EditAddressView(LoginRequiredMixin, View):
     def get(self, request, pk):
-        model = Address.objects.get(pk=pk)
+        model = get_object_or_404(Address, pk=pk, user=request.user)
         form = Addressform(instance=model)
 
         context = {
@@ -135,7 +144,7 @@ class EditAddressView(LoginRequiredMixin, View):
 
 class DeleteAddressView(LoginRequiredMixin, View):
     def get(self, request, pk):
-        model = Address.objects.get(pk=pk)
+        model = get_object_or_404(Address, pk=pk, user=request.user)
         model.delete()
 
         messages.success(request, "Your address has been deleted")
@@ -143,12 +152,13 @@ class DeleteAddressView(LoginRequiredMixin, View):
         return redirect(reverse("address_list"))
     
 
-class OrderView(LoginRequiredMixin, View):
-    def get(self, request):
-        orders = request.user
+class OrderView(LoginRequiredMixin, ListView):
+    model = Order
+    template_name = "user/orders_list.html"
+    paginate_by = 5
+    ordering = "-order_date"
+    context_object_name = "orders"
 
-        context = {
-            "orders":orders,
-        }
-        
-        return render(request, "user/orders_list.html", context=context)
+    def get_queryset(self):
+        return super().get_queryset().filter(user=self.request.user)
+    
